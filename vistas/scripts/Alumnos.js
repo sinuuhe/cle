@@ -8,6 +8,10 @@ function init(){
 	$("#fecha_nacimiento,#fecha_ingreso").datepicker({
 		format:"yyyy-mm-dd"
 	});
+	$("#formulario").on("submit",function(e)
+	{
+		guardaryeditar(e);	
+	})
 
 
 }
@@ -78,13 +82,10 @@ function listar()
 
 function guardaryeditar(e)
 {
+	console.log("Sinuhe")
 	e.preventDefault(); //No se activará la acción predeterminada del evento
 	$("#btnGuardar").prop("disabled",true);
 
-	var newDate = $("#fecha_nacimiento").val();
-	newDate = newDate.split("/").reverse().join("-");
-
-	$("#fecha_nacimiento").val(newDate);
 	var formData = new FormData($("#formulario")[0]);
 	$.ajax({
 		url: "../ajax/Alumnos.php?op=guardaryeditar",

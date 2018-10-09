@@ -16,4 +16,7 @@ define("DB_ENCODE","utf8");
 
 //Definimos una constante como nombre del proyecto
 define("PRO_NOMBRE","ITVentas");
+
+    ini_set('display_errors', 1);
+
 ?>

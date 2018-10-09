@@ -101,7 +101,7 @@ require 'header.php';
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Foto:</label>
-                            <input type="text" class="form-control" name="foto" id="foto" maxlength="50" placeholder="Foto" required>
+                            <input type="file" class="form-control" name="foto" id="foto" maxlength="50" placeholder="Foto" required>
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Empresa:</label>

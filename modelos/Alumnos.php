@@ -10,13 +10,21 @@ Class Alumno
 
 	}
 
+	public function obtenerCantidad(){
+		$sql="SELECT * FROM alumnos";
+		$result = ejecutarConsulta($sql);	
+		return $result -> num_rows + 1; 
+	}
+
 	//Implementamos un método para insertar registros
-	public function insertar($nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$empresa,$beca,$password,$sede)
+	public function insertar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$empresa,$beca,$password,$sede)
 	{
+		
 		$sql="INSERT INTO alumnos (id,nombre,apellidoP,apellidoM,calle,colonia,numero,municipio,telefono,celular,email,fecha_nacimiento,
         fecha_ingreso,foto,status,empresa,beca,password,sede)
-		VALUES (0,'$nombre','$apellidoP','$apellidoM','$calle','$colonia','$numero','$municipio','$telefono',$celular,'$email',
+		VALUES ('$id','$nombre','$apellidoP','$apellidoM','$calle','$colonia','$numero','$municipio','$telefono',$celular,'$email',
 		'$fecha_nacimiento','$fecha_ingreso','$foto',1,'$empresa',$beca,'$password',$sede)";
+		
 		echo $sql;
 		return ejecutarConsulta($sql);
 	}
@@ -61,6 +69,7 @@ Class Alumno
 		$sql="SELECT * FROM convenios where condicion=1";
 		return ejecutarConsulta($sql);		
 	}
+
 }
 
 ?>

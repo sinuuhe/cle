@@ -25,9 +25,18 @@ $sede = isset($_POST["sede"])? limpiarCadena($_POST["sede"]):"";
 switch ($_GET["op"]){
 	case 'guardaryeditar':
 		if (empty($id)){
-			
-			$rspta=$alumno->insertar($nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$empresa,$beca,$password,$sede);
+			//get the new Id
+			$nuevoIdAlumno = "A".Alumno::obtenerCantidad();
+
+			$rspta=$alumno->insertar($nuevoIdAlumno,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$empresa,$beca,$password,$sede);
 			echo $rspta ? "Alumno registrado correctamente." : "No se pudo registrar el alumno. Intente de nuevo por favor.";
+			//Foto
+			$ext = explode(".", $_FILES["foto"]["name"]);
+			if ($_FILES['foto']['type'] == "image/jpg" || $_FILES['foto']['type'] == "image/jpeg" || $_FILES['foto']['type'] == "image/png")
+			{
+				$foto = $nuevoIdAlumno. '.' . end($ext);
+				move_uploaded_file($_FILES["foto"]["tmp_name"], "../files/fotosAlumnos/" . $foto);
+			}
 		}
 		else {
 			$rspta=$alumno->insertar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$empresa,$beca,$password,$sede);
