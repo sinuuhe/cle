@@ -1,5 +1,9 @@
 var tabla;
 
+function elegirBeca(selectName){
+	
+	console($("#" + selectName).attr("data-des"));
+}
 //Función que se ejecuta al inicio
 function init(){
 	mostrarform(false);
@@ -12,10 +16,33 @@ function init(){
 	{
 		guardaryeditar(e);	
 	})
+	$("#empresa").on("change",function()
+	{
+		elegirBeca();
+	})
 
 
 }
 
+function elegirBeca(){
+
+	$("#beca").prop("disabled",false);
+	var becaId = $("#empresa").find(':selected').val();
+	var desc = $("#empresa").find(':selected').data('des');
+
+	if(becaId == -1){
+		$("#beca").prop("disabled",true);
+		$("#beca").val("");
+	}
+	if(becaId == -2){
+		$("#beca").prop("disabled",false);
+		$("#beca").val("");
+	}
+	if(becaId > 0){
+		$("#beca").prop("disabled",true);
+		$("#beca").val(desc);
+	}
+}
 //Función limpiar
 function limpiar()
 {
@@ -160,8 +187,9 @@ function listarConvenio()
 			console.log(respuesta)
 			var options = "";
 			for (option of respuesta){
-				options += "<option value = " + option.id + ">" + option.nombre + "</option>";
+				options += "<option value = " + option.id + " data-des = " + option.des_mensualidad + ">" + option.nombre + "</option>";
 			}
+			options = "<option value = '-1' selected data-des = 0>Ninguna</option><option data-des = 0 value = '-2'>Beca</option>" + options;
             $('#empresa').html(options);
 	    }
 

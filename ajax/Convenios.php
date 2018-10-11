@@ -29,7 +29,8 @@ switch ($_GET["op"]){
  		while ($reg=$rspta->fetch_assoc()){
  			$data[]=array(
                 "id" =>$reg["ID"], 
- 				"nombre"=>$reg["NOMBRE"]
+				 "nombre"=>$reg["NOMBRE"],
+				 "des_mensualidad"=>$reg["DES_MENSUALIDAD"]
  				);
          }
          echo json_encode($data);
