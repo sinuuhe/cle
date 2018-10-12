@@ -7,14 +7,12 @@ var tabla;
 var fecha;
 //Función que se ejecuta al inicio
 function init() {
-    iniciarDatePicker();
     cambiarSemanaNomina();
-    //alert(fecha)
     listar("ver_nopagados");
     actualizarTabla();
 }
-function cambiarSemanaNomina(){
-        $.ajax({
+function cambiarSemanaNomina() {
+    $.ajax({
         url: '../ajax/pago_nomina.php?op=cambiar_semana',
         data: {
             fecha: fecha
@@ -23,10 +21,10 @@ function cambiarSemanaNomina(){
     }).done(function (response) {
         console.log(response);
         try {
-           var respuesta = JSON.parse(response);
-           $("#semana_inicio").text(respuesta.semana_inicio);
-           $("#semana_fin").text(respuesta.semana_fin);
-           $("#numero_semana").text(respuesta.num_semana);
+            var respuesta = JSON.parse(response);
+            $("#semana_inicio").text(respuesta.semana_inicio);
+            $("#semana_fin").text(respuesta.semana_fin);
+            $("#numero_semana").text(respuesta.num_semana);
         } catch (error) {
             console.log(error);
         }
@@ -36,19 +34,21 @@ function cambiarSemanaNomina(){
         console.log(response);
     });
 }
-function iniciarDatePicker(){
-     $("#datepicker").datepicker({
-        language : 'es',
-        clearBtn : true,
-        calendarWeeks : true,
-        autoclose : true,
-        todayHighlight : true,
-        format: 'dd/mm/yyyy'
-     }).datepicker('update', new Date());
-    
-    fecha  = moment($('#datepicker').datepicker("getDate")).format("YYYY-MM-DD");
+function iniciarDatePicker() {
+    $("#datepicker").datepicker({
+        language: 'es',
+        clearBtn: true,
+        calendarWeeks: true,
+        autoclose: true,
+        todayHighlight: true,
+        format: 'dd/mm/yyyy',
+        show: true,
+        endDate: new Date()
+    }).datepicker('update', new Date());
+
+    fecha = moment($('#datepicker').datepicker("getDate")).format("YYYY-MM-DD");
 }
-function actualizarTabla(){
+function actualizarTabla() {
     $(window).resize(function () {
         if (this.resizeTO)
             clearTimeout(this.resizeTO);
@@ -128,9 +128,13 @@ function listar(pago) {
             },
         ],
         "ajax": {
-            url: '../ajax/pago_nomina.php?op=listar&fecha=' + fecha + '&pago=' + pago,
-            type: "get",
-            dataType: "json",
+            url: '../ajax/pago_nomina.php',
+            type: "GET",
+            data: {
+                fecha: fecha,
+                op: 'listar',
+                pago : pago
+            },
             error: function (e) {
                 console.log(e);
             }
@@ -212,28 +216,39 @@ function seleccionarFecha() {
                                 <div class="form-group">\n\
                                     <label for="datepicker" class="col-sm-3 control-label">Selecciona semana</label>\n\
                                     <div class="col-sm-9 input-group date" data-provide="datepicker" id="datepicker">\n\
-                                    <input type="text" class="form-control custom-input" />\n\
+                                    <input required type="text" class="form-control custom-input" />\n\
                                         <span class="input-group-addon">\n\
                                             <span class="glyphicon glyphicon-calendar"></span>\n\
                                         </span>\n\
                                     </div>\n\
                                 </div>\n\
                         </div>',
-                'reverseButtons': true,
-                'labels': {ok: 'Confirmar', cancel: 'Cancelar!'},
-                onok: function () {
+                reverseButtons: true,
+                labels: {
+                    ok: 'Confirmar', 
+                    cancel: 'Cancelar!'
+                },
+                onshow: function(){ 
+                    iniciarDatePicker();
+                },
+                onok: function (closeEvent) {
                     fecha = moment($('#datepicker').datepicker("getDate")).format("YYYY-MM-DD");
-                    cambiarSemanaNomina();
-                    listar("ver_nopagados");
-                    
+                    if (fecha == "Invalid date"){
+                        closeEvent.cancel = true;
+                        alertify.error('Selecciona una Fecha');
+                    }else{
+                        cambiarSemanaNomina();
+                        listar("ver_nopagados");
+                        alertify.success('Semana Cambiada');
+                    } 
                 },
                 oncancel: function () {
-                    alertify.error('Cancelado')
+                    alertify.error('Cancelado');
                 }
             })
-            .setHeader('<span class="fa fa-exclamation-triangle" aria-hidden="true"'
-                    + 'style="vertical-align:middle;color:#e10000;">'
-                    + '</span> ¿Confirmar Pago?')
+            .setHeader('<span class="fa fa-calendar" aria-hidden="true"'
+                    + 'style="vertical-align:middle;color:#000000;">'
+                    + '</span> Cambiar semana de Nómina')
             .show();
 }
 //Función para cambiar el estatus de pago de extras a pagado.
@@ -304,7 +319,7 @@ function pagar(idpagonomina) {
             })
             .setHeader('<span class="fa fa-exclamation-triangle" aria-hidden="true"'
                     + 'style="vertical-align:middle;color:#e10000;">'
-                    + '</span> ¿Confirmar Pago?')
+                    + '</span> ¿Confirmar Pago ?')
             .show();
 }
 //Función para ver los recibos de pago, que ya fueron pagados.
@@ -313,7 +328,7 @@ function ver_recibo(idpagonomina) {
         "method": "POST",
         "target": "_blank",
         "html": '<input type="hidden" id="idpagonomina" name="idpagonomina" value="' + idpagonomina + '" />' +
-                '<input type="hidden" id="concepto" name="concepto" value="Pago de Nómina" />'+
+                '<input type="hidden" id="concepto" name="concepto" value="Pago de Nómina" />' +
                 '<input type="hidden" id="tipo" name="formato" value="pago_nomina" />',
         "action": '../impresiones/tickets/ticketPDF.php'
     }).appendTo(document.body).submit();
