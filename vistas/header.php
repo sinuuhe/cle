@@ -34,7 +34,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Theme style -->
     <link rel="stylesheet" href="../public/dist/css/AdminLTE.min.css">
      <!-- DATE PICKER -->
-     <link rel="stylesheet" href="../public/bower_components/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="../public/bower_components/bootstrap-datepicker/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="../public/bower_components/bootstrap-select/css/bootstrap-select.min.css">
     <!-- AdminLTE Skins. Choose a skin from the css/skins
          folder instead of downloading all of them to reduce the load. -->
     <link rel="stylesheet" href="../public/dist/css/skins/_all-skins.min.css">
