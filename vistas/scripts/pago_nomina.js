@@ -11,6 +11,7 @@ function init() {
     listar("ver_nopagados");
     actualizarTabla();
 }
+//Función para  cambiar los labels de la vista, para que se pueda visualizar el número de semana y las fechas correspondientes.
 function cambiarSemanaNomina() {
     $.ajax({
         url: '../ajax/pago_nomina.php?op=cambiar_semana',
@@ -34,6 +35,7 @@ function cambiarSemanaNomina() {
         console.log(response);
     });
 }
+//Función para iniciar el datepicker y que el usuario pueda seleccionar la semana
 function iniciarDatePicker() {
     $("#datepicker").datepicker({
         language: 'es',
@@ -208,6 +210,7 @@ function tipopago(pago) {
 
     }
 }
+//Función que abre el modal para que el usuario selecciona la semana para poder visualizar la nomina de esa semana.
 function seleccionarFecha() {
     alertify.dialog('confirm').
             set({
