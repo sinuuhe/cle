@@ -1,0 +1,25 @@
+.tamano{
+	width: 25%;
+}
+
+.sinEspacio{
+	margin-top: -20px;
+}
+
+img{
+    filter: grayscale(100%);
+}
+
+.sinEspacioParrafo{
+	margin-top: -37px;
+}
+
+.parrafo{
+	width: 68%;	
+	display: inline;
+	float: left;
+}
+
+.abajo{
+	margin-top: 70px;
+}

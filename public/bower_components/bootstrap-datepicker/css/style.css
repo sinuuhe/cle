@@ -1,0 +1,6 @@
+.custom-input{box-shadow:none;}
+.bg-white{background:#fff !important;}
+label{margin-left: 20px;margin-top:20px;}
+#datepicker{width:280px; margin: 0px 20px 20px 20px;box-shadow:2px 2px 7px rgba(0,0,0,0.1);border-radius:4px;}
+#datepicker > span:hover{cursor: pointer;}
+.datepicker .prev, .datepicker .next {font-size:25px !important;line-height:12px !important; vertical-align:top;}
