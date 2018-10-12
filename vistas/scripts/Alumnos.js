@@ -20,8 +20,33 @@ function init(){
 	{
 		elegirBeca();
 	})
+	$("#beca").prop("disabled",true);
+	$("#beca").val(0);
 
+}
 
+function baja(alumnoId, nombre){
+	bootbox.confirm("¿Seguro que desea dar de baja al alumno " + nombre + "?", function(result){
+		if(result)
+        {
+        	$.post("../ajax/Alumnos.php?op=baja", {id : alumnoId}, function(e){
+        		bootbox.alert(e);
+	            tabla.ajax.reload();
+        	});	
+        }
+	})
+}
+
+function alta(alumnoId, nombre){
+	bootbox.confirm("¿Seguro que desea dar de alta al alumno " + nombre + "?", function(result){
+		if(result)
+        {
+        	$.post("../ajax/Alumnos.php?op=alta", {id : alumnoId}, function(e){
+        		bootbox.alert(e);
+	            tabla.ajax.reload();
+        	});	
+        }
+	})
 }
 
 function elegirBeca(){
@@ -29,14 +54,15 @@ function elegirBeca(){
 	$("#beca").prop("disabled",false);
 	var becaId = $("#empresa").find(':selected').val();
 	var desc = $("#empresa").find(':selected').data('des');
-
+	//ninguna
 	if(becaId == -1){
 		$("#beca").prop("disabled",true);
-		$("#beca").val("");
+		$("#beca").val(0);
 	}
+	//ingresar beca
 	if(becaId == -2){
 		$("#beca").prop("disabled",false);
-		$("#beca").val("");
+		$("#beca").val(0);
 	}
 	if(becaId > 0){
 		$("#beca").prop("disabled",true);
@@ -49,11 +75,30 @@ function limpiar()
 	$("#idcategoria").val("");
 	$("#nombre").val("");
 	$("#descripcion").val("");
+	$("#nombre").val("");
+	$("#apellidoP").val("");
+	$("#apellidoM").val("");
+	$("#calle").val("");
+	$("#colonia").val("");
+	$("#numero").val("");
+	$("#municipio").val("");
+	$("#telefono").val("");
+	$("#celular").val("");
+	$("#email").val("");
+	$("#fecha_nacimiento").val("");
+	$("#fecha_ingreso").val("");
+	$("#foto").val("");
+	$("#empresa").val("");
+	$("#beca").val("");
+	$("#sede").val("");
+
+	$("#beca").prop("disabled",true);
 }
 
 //Función mostrar formulario
 function mostrarform(flag)
 {
+	$("#fotoDiv").show();
 	//limpiar();
 	if (flag)
 	{
@@ -109,10 +154,10 @@ function listar()
 
 function guardaryeditar(e)
 {
-	console.log("Sinuhe")
 	e.preventDefault(); //No se activará la acción predeterminada del evento
+	$("#beca").prop("disabled",false);
 	$("#btnGuardar").prop("disabled",true);
-
+	$("#fotoDiv").show();
 	var formData = new FormData($("#formulario")[0]);
 	$.ajax({
 		url: "../ajax/Alumnos.php?op=guardaryeditar",
@@ -132,16 +177,33 @@ function guardaryeditar(e)
 	limpiar();
 }
 
-function mostrar(idcategoria)
+function mostrar(idAlumno,nombre)
 {
-	$.post("../ajax/categoria.php?op=mostrar",{idcategoria : idcategoria}, function(data, status)
+	$.post("../ajax/Alumnos.php?op=mostrar",{id : idAlumno}, function(data, status)
 	{
 		data = JSON.parse(data);		
 		mostrarform(true);
 
+		$("#id").val(data.id);
 		$("#nombre").val(data.nombre);
 		$("#descripcion").val(data.descripcion);
- 		$("#idcategoria").val(data.idcategoria);
+		$("#nombre").val(data.nombre);
+		$("#apellidoP").val(data.apellidoP);
+		$("#apellidoM").val(data.apellidoM);
+		$("#calle").val(data.calle);
+		$("#colonia").val(data.colonia);
+		$("#numero").val(data.numero);
+		$("#municipio").val(data.municipio);
+		$("#telefono").val(data.telefono);
+		$("#celular").val(data.celular);
+		$("#email").val(data.email);
+		$("#fecha_nacimiento").val(data.fecha_nacimiento);
+		$("#fecha_ingreso").val(data.fecha_ingreso);
+		$("#foto").val(data.foto);
+		//$("#fotoDiv").hide();
+		$("#beca").val(data.beca);
+		$("#sede").val(data.sede);
+		listarConvenio(data.empresa);
 
  	})
 }
@@ -173,9 +235,39 @@ function activar(idcategoria)
         }
 	})
 }
-function listarConvenio()
+function listarConvenio(idConvenio)
 {
+	if(idConvenio != undefined){
+		$.ajax({
+			url: "../ajax/Convenios.php?op=listar",
+			type: "GET",
+			contentType: false,
+			processData: false,
+			success: function(datos)
+			{  
+				var respuesta=Object.values(JSON.parse(datos));
+				console.log(respuesta)
+				var options = "";
+				for (option of respuesta){
+					if(option.id == idConvenio){
+						options += "<option selected value = " + option.id + " data-des = " + option.des_mensualidad + ">" + option.nombre + "</option>";
+					}else{
+						options += "<option value = " + option.id + " data-des = " + option.des_mensualidad + ">" + option.nombre + "</option>";
+					}
+				}
+
+				if(option.id == 0){
+					options += "<option selected value = " + option.id + " data-des = " + option.des_mensualidad + ">" + option.nombre + "</option>";
+				}else{
+					options = "<option value = '-1'  data-des = 0>Ninguna</option><option data-des = 0 value = '-2'>Beca</option>" + options;
+				}
+				$('#empresa').html(options);
+			}
 	
+		});
+	}else{
+
+	}
     $.ajax({
 		url: "../ajax/Convenios.php?op=listar",
 	    type: "GET",

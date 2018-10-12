@@ -19,27 +19,32 @@ $fecha_ingreso = isset($_POST["fecha_ingreso"])? limpiarCadena($_POST["fecha_ing
 $foto = isset($_POST["foto"])? limpiarCadena($_POST["foto"]):"";
 $empresa = isset($_POST["empresa"])? limpiarCadena($_POST["empresa"]):"";
 $beca = isset($_POST["beca"])? limpiarCadena($_POST["beca"]):"";
-$password = isset($_POST["password"])? limpiarCadena($_POST["password"]):"";
 $sede = isset($_POST["sede"])? limpiarCadena($_POST["sede"]):"";
+$status = isset($_POST["status"])? limpiarCadena($_POST["status"]):"";
 
 switch ($_GET["op"]){
 	case 'guardaryeditar':
 		if (empty($id)){
 			//get the new Id
 			$nuevoIdAlumno = "A".Alumno::obtenerCantidad();
-
-			$rspta=$alumno->insertar($nuevoIdAlumno,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$empresa,$beca,$password,$sede);
-			echo $rspta ? "Alumno registrado correctamente." : "No se pudo registrar el alumno. Intente de nuevo por favor.";
-			//Foto
+			$password = strtoupper($nombre).strtoupper($apellidoP);
 			$ext = explode(".", $_FILES["foto"]["name"]);
+			$foto = $nuevoIdAlumno. '.' . end($ext);
+			$ruta = "/files/fotosAlumnos/".$foto;
+			$rspta=$alumno->insertar($nuevoIdAlumno,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$ruta,$empresa,$beca,$password,$sede);
+			echo $rspta ? "Alumno registrado correctamente." : "No se pudo registrar el alumno. Intente de nuevo por favor.";
+
+
+			//Foto
+			
 			if ($_FILES['foto']['type'] == "image/jpg" || $_FILES['foto']['type'] == "image/jpeg" || $_FILES['foto']['type'] == "image/png")
 			{
-				$foto = $nuevoIdAlumno. '.' . end($ext);
+				
 				move_uploaded_file($_FILES["foto"]["tmp_name"], "../files/fotosAlumnos/" . $foto);
 			}
 		}
 		else {
-			$rspta=$alumno->insertar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$empresa,$beca,$password,$sede);
+			$rspta=$alumno->editar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$status,$empresa,$beca,$password,$sede);
 			echo $rspta ? "Alumno actualizado correctamente." : "No se pudo actuailzar el alumno. Intente de nuevo por favor.";
 		}
 	break;
@@ -54,8 +59,18 @@ switch ($_GET["op"]){
  		echo $rspta ? "Categoría activada" : "Categoría no se puede activar";
 	break;
 
+	case 'baja':
+		$rspta=$alumno->baja($id);
+ 		echo $rspta ? "Alumno dado de baja correctamente" : "Alumno no se puede dar de baja";
+	break;
+
+	case 'alta':
+		$rspta=$alumno->alta($id);
+ 		echo $rspta ? "Alumno dado de alta correctamente" : "Alumno no se puede dar de alta";
+	break;
+
 	case 'mostrar':
-		$rspta=$alumno->mostrar($idcategoria);
+		$rspta=$alumno->mostrar($id);
  		//Codificar el resultado utilizando json
  		echo json_encode($rspta);
 	break;
@@ -67,12 +82,14 @@ switch ($_GET["op"]){
 
  		while ($reg=$rspta->fetch_object()){
  			$data[]=array(
- 				"0"=>(!$reg->status)?'<button class="btn btn-danger" onclick="pagar('.$reg->id.')"><i class="fa fa-money"></i>  Pagar</button>':
- 					'<button class="btn btn-success" onclick="ver_recibo('.$reg->id.')"><i class="fa fa-eye"></i> Recibo</button>',
+ 				"0"=>(!$reg->status)?'<button class="btn btn-success" onclick="alta(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Alta</button>':
+					 '<button class="btn btn-danger" onclick="baja(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i> Baja</button>
+					 <button class="btn btn-warning" onclick="mostrar(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Editar</button>',
  				"1"=>$reg->nombre,
  				"2"=>$reg->apellidoP,
                 "3"=>$reg->apellidoM,
-                "4"=>$reg->status
+                "4"=>($reg->status)?'<span class="label bg-green">Activo</span>':
+									'<span class="label bg-red">Baja</span>'
  				);
  		}
  		$results = array(

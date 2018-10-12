@@ -33,6 +33,7 @@ require 'header.php';
                     <div class="panel-body table-responsive" id="listadoregistros">
                         <table id="tbllistado" class="table table-striped table-bordered table-condensed table-hover">
                           <thead>
+                          <th>Opciones</th>
                             <th>Nombre</th>
                             <th>Apellido Paterno</th>
                             <th>Apellido Materno</th>
@@ -41,6 +42,7 @@ require 'header.php';
                           <tbody>                            
                           </tbody>
                           <tfoot>
+                          <th>Opciones</th>
                             <th>Nombre</th>
                             <th>Apellido Paterno</th>
                             <th>Apellido Materno</th>
@@ -99,7 +101,7 @@ require 'header.php';
                             <label>Fecha de ingreso:</label>
                             <input data-provider = "datepicker" type="text" class="form-control" name="fecha_ingreso" id="fecha_ingreso" maxlength="50" placeholder="Fecha ingreso" required>
                           </div>
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                          <div id = "fotoDiv"class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Foto:</label>
                             <input type="file" class="form-control" name="foto" id="foto" maxlength="50" placeholder="Foto" required>
                           </div>
@@ -109,9 +111,6 @@ require 'header.php';
                           </div><div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Beca:</label>
                             <input type="text" class="form-control" name="beca" id="beca" maxlength="50" placeholder="Beca" required>
-                          </div><div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Password:</label>
-                            <input type="text" class="form-control" name="password" id="password" maxlength="50" placeholder="Password" required>
                           </div><div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Sede:</label>
                             <input type="text" class="form-control" name="sede" id="sede" maxlength="50" placeholder="Sede" required>

@@ -25,14 +25,13 @@ Class Alumno
 		VALUES ('$id','$nombre','$apellidoP','$apellidoM','$calle','$colonia','$numero','$municipio','$telefono',$celular,'$email',
 		'$fecha_nacimiento','$fecha_ingreso','$foto',1,'$empresa',$beca,'$password',$sede)";
 		
-		echo $sql;
 		return ejecutarConsulta($sql);
 	}
 
 	//Implementamos un método para editar registros
 	public function editar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$status,$empresa,$beca,$password,$sede)
 	{
-		$sql="UPDATE alumnos SET nombre = '$nombre',apellidoP = '$apellidoP',apellidoM = '$apellidoM',calle = '$calle',colonia = '$colonia',numero = '$numero',municipio = '$municipio',telefono = '$telefono',celular = '$celular',email = '$email',fecha_nacimiento = '$fecha_nacimiento',fecha_ingreso = '$fecha_ingreso',foto = '$foto',status = '$status',empresa = '$empresa' ,beca = '$beca',password = '$password',sede = '$sede' WHERE id='$id'";
+		$sql="UPDATE alumnos SET nombre = '$nombre',apellidoP = '$apellidoP',apellidoM = '$apellidoM',calle = '$calle',colonia = '$colonia',numero = '$numero',municipio = '$municipio',telefono = '$telefono',celular = '$celular',email = '$email',fecha_nacimiento = '$fecha_nacimiento',fecha_ingreso = '$fecha_ingreso',status = '$status',empresa = '$empresa' ,beca = '$beca',password = '$password',sede = '$sede' WHERE id='$id'";
 		return ejecutarConsulta($sql);
 	}
 
@@ -40,6 +39,19 @@ Class Alumno
 	public function desactivar($idcategoria)
 	{
 		$sql="UPDATE categoria SET condicion='0' WHERE idcategoria='$idcategoria'";
+		return ejecutarConsulta($sql);
+	}
+
+	//Implementamos un método para desactivar categorías
+	public function baja($id)
+	{
+		$sql="UPDATE alumnos SET status='0' WHERE id='$id'";
+		return ejecutarConsulta($sql);
+	}
+
+	public function alta($id)
+	{
+		$sql="UPDATE alumnos SET status='1' WHERE id='$id'";
 		return ejecutarConsulta($sql);
 	}
 
@@ -51,7 +63,7 @@ Class Alumno
 	}
 
 	//Implementar un método para mostrar los datos de un registro a modificar
-	public function mostrar($idcategoria)
+	public function mostrar($id)
 	{
 		$sql="SELECT * FROM alumnos WHERE id='$id'";
 		return ejecutarConsultaSimpleFila($sql);
