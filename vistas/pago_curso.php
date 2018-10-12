@@ -15,7 +15,7 @@ require 'header.php';
             <div class="col-md-12">
                 <div class="box  ">
                     <div class="box-header  with-border">
-                        <h3 class="box-title">Pago de extras</h3>
+                        <h3 class="box-title">Pago de curso</h3>
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-success" id="btnverpagados" onclick="listar('ver_pagados')"> <i class="fa fa-check-square-o" aria-hidden="true"></i> Pagos</button>
                             <button type="button" class="btn btn-danger" id="btnvernopagados" onclick="listar('ver_nopagados')"> <i class="fa fa-times-circle" aria-hidden="true"></i> Adeudos</button>
