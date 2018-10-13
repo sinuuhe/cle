@@ -282,7 +282,18 @@ desired effect
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
         <li><a href="#"><i class="fa fa-link"></i> <span>Financieros</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>Academicos</span></a></li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-link"></i> <span>Académicos</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="Alumnos.php">Alumnos</a></li>
+            <li><a href="maestros.php">Maestros</a></li>
+            <li><a href="grupos.php">Grupos</a></li>
+          </ul>
+        </li>
         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Financiero</span>
             <span class="pull-right-container">
