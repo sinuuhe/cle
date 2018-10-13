@@ -72,7 +72,7 @@ function elegirBeca(){
 //Función limpiar
 function limpiar()
 {
-	$("#idcategoria").val("");
+	$("#id").val("");
 	$("#nombre").val("");
 	$("#descripcion").val("");
 	$("#nombre").val("");
@@ -93,13 +93,14 @@ function limpiar()
 	$("#sede").val("");
 
 	$("#beca").prop("disabled",true);
+	$("#id").attr("status","");
 }
 
 //Función mostrar formulario
 function mostrarform(flag)
 {
 	$("#fotoDiv").show();
-	//limpiar();
+	limpiar();
 	if (flag)
 	{
 		$("#listadoregistros").hide();
@@ -159,6 +160,16 @@ function guardaryeditar(e)
 	$("#btnGuardar").prop("disabled",true);
 	$("#fotoDiv").show();
 	var formData = new FormData($("#formulario")[0]);
+
+	if($("#foto").attr("rutaFoto") != ""){
+		formData.append("foto",$("#foto").attr("rutaFoto"))
+	}
+	
+	if($("#id").attr("status") != ""){
+		formData.append("status",$("#id").attr("status"))
+		console.log("entro");
+	}
+
 	$.ajax({
 		url: "../ajax/Alumnos.php?op=guardaryeditar",
 	    type: "POST",
@@ -185,6 +196,7 @@ function mostrar(idAlumno,nombre)
 		mostrarform(true);
 
 		$("#id").val(data.id);
+		$("#id").attr("status",data.status);
 		$("#nombre").val(data.nombre);
 		$("#descripcion").val(data.descripcion);
 		$("#nombre").val(data.nombre);
@@ -199,7 +211,7 @@ function mostrar(idAlumno,nombre)
 		$("#email").val(data.email);
 		$("#fecha_nacimiento").val(data.fecha_nacimiento);
 		$("#fecha_ingreso").val(data.fecha_ingreso);
-		$("#foto").val(data.foto);
+		$("#foto").attr("rutaFoto",data.foto)
 		//$("#fotoDiv").hide();
 		$("#beca").val(data.beca);
 		$("#sede").val(data.sede);
