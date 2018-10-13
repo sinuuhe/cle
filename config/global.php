@@ -4,13 +4,13 @@
 define("DB_HOST","localhost");
 
 //Nombre de la base de datos
-define("DB_NAME", "cle_v2");
+define("DB_NAME", "cledb");
 
 //Usuario de la base de datos
 define("DB_USERNAME", "root");
 
 //Contraseña del usuario de la base de datos
-define("DB_PASSWORD", "");
+define("DB_PASSWORD", "Abecedario123");
 
 //definimos la codificación de los caracteres
 define("DB_ENCODE","utf8");
