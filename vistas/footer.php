@@ -123,7 +123,7 @@
 <script src="../public/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script src="../public/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.es.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
-<script src="../public/bower_components/bootstrap-select/js/bootstrap-select.min.js"><script>
+<script src="../public/bower_components/bootstrap-select/js/bootstrap-select.min.js"></script>
     
  </body>
 </html>
