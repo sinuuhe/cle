@@ -18,7 +18,7 @@ function cambiarSemanaNomina() {
         data: {
             fecha: fecha
         },
-        type: 'GET'
+        method: 'GET'
     }).done(function (response) {
         console.log(response);
         try {
@@ -241,9 +241,11 @@ function seleccionarFecha() {
                         alertify.error('Selecciona una Fecha');
                     }else{
                         cambiarSemanaNomina();
+                        $('#fecha').remove();
+                        $( "body" ).append( '<input type="hidden" id="fecha" value="'+fecha+'" />' );
                         listar("ver_nopagados");
                         alertify.success('Semana Cambiada');
-                    } 
+                    }
                 },
                 oncancel: function () {
                     alertify.error('Cancelado');
@@ -301,17 +303,16 @@ function pagar(idpagonomina) {
                 'reverseButtons': true,
                 'labels': {ok: 'Confirmar', cancel: 'Cancelar!'},
                 onok: function () {
-                    $.post("../ajax/pago_nomina.php?op=pagar", {idpagonomina: idpagonomina},
+                    $.post("../ajax/pago_nomina.php?op=pagar", {idpagonomina: idpagonomina,fech:$('#fecha').val()},
                             function (e) {
                                 try {
                                     var respuesta = JSON.parse(e);
                                     alertify.notify(respuesta.mensaje, respuesta.verificar, 5, function () {
-                                        console.log('dismissed');
                                     });
+                                    fecha = respuesta.fecha;
                                     tabla.ajax.reload();
                                 } catch (error) {
                                     alertify.notify(error.message, 'error', 5, function () {
-                                        console.log('dismissed');
                                     });
                                 }
                             });

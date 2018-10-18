@@ -7,6 +7,7 @@ $pago_nomina = new PagoNomina();
 $idpagonomina = isset($_POST["idpagonomina"]) ? limpiarCadena($_POST["idpagonomina"]) : "";
 $pago = isset($_GET["pago"]) ? limpiarCadena($_GET["pago"]) : "";
 $fecha = isset($_GET["fecha"]) ? limpiarCadena($_GET["fecha"]) : date("Y-m-d H:i:s");
+$fech = isset($_POST["fech"]) ? limpiarCadena($_POST["fech"]) : date("Y-m-d H:i:s");
 
 switch ($_GET["op"]) {
     case 'cambiar_semana':
@@ -24,7 +25,7 @@ switch ($_GET["op"]) {
 
     case 'pagar':
         $rspta = $pago_nomina->pagar($idpagonomina, date("Y-m-d H:i:s"));
-        echo $rspta ? json_encode(array('verificar' => 'success', 'mensaje' => 'Pago realizado con éxito.')) :
+        echo $rspta ? json_encode(array('verificar' => 'success', 'mensaje' => 'Pago realizado con éxito.','fecha' => "$fech")) :
                 json_encode(array('verificar' => 'error', 'mensaje' => 'Pago no realizado.'));
         break;
 
