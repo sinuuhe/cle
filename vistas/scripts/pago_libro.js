@@ -4,17 +4,19 @@
  * and open the template in the editor.
  */
 var tabla;
+
 function init() {
     inicializarSelects();
     listar_pagos();
     togglePanel();
+    agregarValorCosto();
+    pagar();
 }
-
 
 function togglePanel() {
     $('.nav-pills a').on('shown.bs.tab', function (event) {
         var nombre = $(event.target).text();         // active tab
-        if (nombre == "Libros Pagados"){
+        if (nombre == "Libros Pagados") {
             //listar_pagos();
         }
         var y = $(event.relatedTarget).text();  // previous tab
@@ -54,18 +56,16 @@ function inicializarSelects() {
             {"op": "iniciar_selects"})
             .done(function (data, textStatus, jqXHR) {
                 try {
-                    //console.log(data);
-                    //var respuesta = JSON.parse(data.alumnos);
                     $.each(data, function (key, dat) {
                         $.each(dat.alumnos, function (key, alumnos) {
                             $("#alumno").append(
                                     '<option data-content="<span class=\'badge badge-success\'>' + alumnos.id + '</span> - '
-                                    + alumnos.nombre + ' ' + alumnos.apellidoP + ' ' + alumnos.apellidoM +'" value="' + alumnos.id + '"></option>');
+                                    + alumnos.nombre + ' ' + alumnos.apellidoP + ' ' + alumnos.apellidoM + '" value="' + alumnos.id + '"></option>');
                             $("#alumno").selectpicker('refresh');
                         });
                         $.each(dat.libros, function (key, libros) {
                             $("#libro").append(
-                                    '<option data-content="'+ libros.nombre +' - <span class=\'badge badge-success\'>  $' + libros.costo + '</span>" \n\
+                                    '<option value="' + libros.id + '" data-costo="' + libros.costo + '" data-content="' + libros.nombre + ' - <span class=\'badge badge-success\'>  $' + libros.costo + '</span>" \n\
                                     value="' + libros.id + '"></option>');
                             $("#libro").selectpicker('refresh');
                         });
@@ -81,25 +81,93 @@ function inicializarSelects() {
                 }
             });
 }
-function pagar() {
-    $.ajax({
-        method: "POST",
-        url: "../ajax/pago_libro.php",
-        dataType: "json",
-        data: $("form").serialize()
-    }).done(function () {
-        alert("success");
-    }).fail(function () {
-        alert("error");
-    }).always(function () {
-        alert("complete");
+function agregarValorCosto() {
+    $("#libro").on('change', function (e) {
+        var costo = $(this).find(':selected').data('costo');
+        $('#libro_costo').remove();
+        $('#pagar_libros').append('<input type="hidden" id="libro_costo" name="libro_costo" value="' + costo + '">');
+        console.log($(this).val());
     });
-    
-     if (tabla !== undefined && tabla !== null) {
-            tabla.ajax.reload();//Se actualiza la tabla porque se redimensiona la pantalla. (FECHA_PAGO)
-        }
 }
-function listar_pagos(){
+function pagar() {
+    $('form#pagar_libros').submit(function () {
+        var dato = $( this ).serializeObject();
+        event.preventDefault();
+        alertify.dialog('confirm').
+                set({
+                    transition: 'slide',
+                    message: '	\n\
+        <div class="form-horizontal">\n\
+		<div class="form-group ">\n\
+			<label for="alertify-libro" class="col-sm-3 control-label">Libro</label>\n\
+			<div class="col-sm-9 ">\n\
+                            <input id="alertify-libro" disabled type="text" class="form-control" value="' + dato.libro + '">\n\
+                        </div>\n\
+		</div>\n\
+		<div class="form-group">\n\
+			<label for="alertify-comprador" class="col-sm-3 control-label">Comprador</label>\n\
+			<div class="col-sm-9">\n\
+                            <input id="alertify-comprador" disabled type="text" class="form-control" value="' + dato.alumno + '">\n\
+			</div>\n\
+		</div>\n\
+                <div class="form-group">\n\
+                    <label for="alertify-forma-pago" class="col-sm-3 control-label">Forma Pago</label>\n\
+                    <div class="col-sm-9">\n\
+                        <input id="alertify-forma-pago" disabled type="text" class="form-control" value="' + dato.forma_pago + '">\n\
+                    </div>\n\
+		</div>\n\
+		<div class="form-group">\n\
+			<label for="alertify-monto-pago" class="col-sm-3 control-label">Total a pagar</label>\n\
+			<div class="col-sm-9">\n\
+                            <div class="input-group">\n\
+                                <div class="input-group-addon">$</div>\n\
+				<input id="alertify-monto-pago" disabled type="text" class="form-control" value="' + dato.libro_costo + '">\n\
+                            </div>\n\
+                        </div>\n\
+		</div>\n\
+	</div>',
+                    'reverseButtons': true,
+                    'labels': {ok: 'Confirmar', cancel: 'Cancelar!'},
+                    onok: function () {
+                        $.ajax({
+                            method: "POST",
+                            url: "../ajax/pago_libro.php?op=pagar",
+                            dataType: "json",
+                            data: $("form#pagar_libros").serialize()
+                        }).done(function (data, textStatus, jqXHR) {
+                            try {
+                                alertify.notify(data.mensaje, data.verificar, 5, function () {
+                                });
+                                tabla.ajax.reload();
+                                resetForm();
+                            } catch (error) {
+                                alertify.notify(error.message, 'error', 5, function () {
+                                });
+                            }
+                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                            if (console && console.log) {
+                                console.log("Algo ha fallado: " + textStatus + " " + jqXHR + " " + errorThrown);
+                            }
+                        });
+                    },
+                    oncancel: function () {
+                        alertify.error('Cancelado')
+                    }
+                })
+                .setHeader('<span class="fa fa-exclamation-triangle" aria-hidden="true"'
+                        + 'style="vertical-align:middle;color:#e10000;">'
+                        + '</span> ¿Confirmar Pago ?')
+                .show();
+    });
+
+}
+function resetForm() {
+    $('#libro_costo').remove();
+    $($("form#pagar_libros"))[0].reset();
+    $(".selectpicker").val('default');
+    $(".selectpicker").selectpicker("refresh");
+}
+function listar_pagos() {
     tabla = $('#tbllistado').dataTable({
         responsive: {
             details: {
@@ -198,4 +266,20 @@ function listar_pagos(){
         }
     }).DataTable();
 }
+$.fn.serializeObject = function()
+{
+   var o = {};
+   var a = this.serializeArray();
+   $.each(a, function() {
+       if (o[this.name]) {
+           if (!o[this.name].push) {
+               o[this.name] = [o[this.name]];
+           }
+           o[this.name].push(this.value || '');
+       } else {
+           o[this.name] = this.value || '';
+       }
+   });
+   return o;
+};
 init();

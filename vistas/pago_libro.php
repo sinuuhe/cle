@@ -18,7 +18,11 @@ require 'header.php';
                         <h3 class="box-title">Pago de libro</h3>
                         <div class="box-tools pull-right">
                             <ul class="nav nav-pills ">
-                                <li role="presentation" class="active"><a data-toggle="tab" href="#pagar_libros">Vender Libros</a></li>
+                                <li role="presentation" class="active">
+                                    <a data-toggle="tab" href="#pagar_libros">
+                                    Vender Libros
+                                    </a>
+                                </li>
                                 <li role="presentation"><a data-toggle="tab"  href="#tabla_libros">Libros Pagados</a></li>
                             </ul>
                         </div>
@@ -65,7 +69,7 @@ require 'header.php';
                             </div>
                             <div class="form-group text-right">
                                 <div class="col-sm-offset-2 col-sm-10">
-                                    <button type="submit"  class="btn btn-bitbucket btn-large "><i class="fa fa-check-square-o" aria-hidden="true"></i> Pagar</button>
+                                    <button id="pagar" type="submit"  class="btn btn-bitbucket btn-large "><i class="fa fa-check-square-o" aria-hidden="true"></i> Pagar</button>
                                 </div>
                             </div>
                         </form>

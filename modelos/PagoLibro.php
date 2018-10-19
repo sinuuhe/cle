@@ -29,8 +29,8 @@ Class PagoLibro {
     }
 
     //Implementamos un método para cambiar estatus de pago a "pagado".
-    public function pagar($id, $fecha_pago, $forma_pago) {
-        $sql = "UPDATE pago_cursos SET status=1,fecha_pago='$fecha_pago',FORMA_PAGO='$forma_pago' WHERE ID='$id'";
+    public function pagar( $fecha_pago,$id_alumno,$id_libro,$costo_libro,$forma_pago) {
+        $sql = "INSERT INTO pago_libros (ID_ALUMNO,TOTAL_PAGO,ID_LIBRO,FECHA_PAGO,FORMA_PAGO) VALUES ('$id_alumno',$costo_libro,'$id_libro','$fecha_pago','$forma_pago')";
         
         return ejecutarConsulta($sql);
     }

@@ -6,6 +6,12 @@ require_once dirname(__DIR__, 1) . "/modelos/Alumnos.php";
 $pago_libro = new PagoLibro();
 $alumno = new Alumno();
 
+$id_libro=isset($_POST["libro"])? limpiarCadena($_POST["libro"]):"";
+$id_alumno=isset($_POST["alumno"])? limpiarCadena($_POST["alumno"]):"";
+$fecha_pago=date("Y-m-d H:i:s");
+$costo_libro=isset($_POST["libro_costo"])? limpiarCadena($_POST["libro_costo"]):"";
+$forma_pago=isset($_POST["forma_pago"])? limpiarCadena($_POST["forma_pago"]):"";
+
 switch ($_GET["op"]) {
     case 'iniciar_selects':
         $dataAlumnos = Array();
@@ -51,9 +57,9 @@ switch ($_GET["op"]) {
         break;
 
     case 'pagar':
-        $rspta = $pago_libro->pagar($idpagolibro, date("Y-m-d H:i:s"), $forma_pago);
+        $rspta = $pago_libro->pagar($fecha_pago,$id_alumno,$id_libro,$costo_libro,$forma_pago);
         echo $rspta ? json_encode(array('verificar' => 'success', 'mensaje' => 'Pago realizado con éxito.')) :
-                json_encode(array('verificar' => 'error', 'mensaje' => 'Pago no realizado.'));
+                json_encode(array('verificar' => 'error', 'mensaje' => 'Pago no realizado.'.$conexion->error));
         break;
 
     case 'listar_pago':
