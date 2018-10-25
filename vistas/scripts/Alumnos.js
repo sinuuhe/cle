@@ -26,27 +26,49 @@ function init(){
 }
 
 function baja(alumnoId, nombre){
-	bootbox.confirm("¿Seguro que desea dar de baja al alumno " + nombre + "?", function(result){
-		if(result)
-        {
-        	$.post("../ajax/Alumnos.php?op=baja", {id : alumnoId}, function(e){
-        		bootbox.alert(e);
-	            tabla.ajax.reload();
-        	});	
-        }
-	})
+	alertify.dialog('confirm').
+            set({
+                transition: 'slide',
+                message: 'Desea dar de baja al alumno ' + nombre + '?',
+                'reverseButtons': true,
+                'labels': {ok: 'Confirmar', cancel: 'Cancelar!'},
+                onok: function () {
+						$.post("../ajax/Alumnos.php?op=baja", {id : alumnoId}, function(e){
+							alertify.success(e);
+							tabla.ajax.reload();
+						});	
+                },
+                oncancel: function () {
+                    //alertify.error('Cancelado')
+                }
+            })
+            .setHeader('<span class="fa fa-info-circle" aria-hidden="true"'
+                    + 'style="vertical-align:middle;color:#3399ff;">'
+                    + '</span> Confirmar Alta')
+            .show();  
 }
 
 function alta(alumnoId, nombre){
-	bootbox.confirm("¿Seguro que desea dar de alta al alumno " + nombre + "?", function(result){
-		if(result)
-        {
-        	$.post("../ajax/Alumnos.php?op=alta", {id : alumnoId}, function(e){
-        		bootbox.alert(e);
-	            tabla.ajax.reload();
-        	});	
-        }
+	alertify.dialog('confirm').
+	set({
+		transition: 'slide',
+		message: "¿Seguro que desea dar de alta al alumno " + nombre + "?",
+		'reverseButtons': true,
+		'labels': {ok: 'Confirmar', cancel: 'Cancelar!'},
+		onok: function () {
+				$.post("../ajax/Alumnos.php?op=alta", {id : alumnoId}, function(e){
+					alertify.success(e);
+					tabla.ajax.reload();
+				});	
+		},
+		oncancel: function () {
+			//alertify.error('Alta exitosa')
+		}
 	})
+	.setHeader('<span class="fa fa-info-circle" aria-hidden="true"'
+			+ 'style="vertical-align:middle;color:#3399ff;">'
+			+ '</span> Confirmar Alta')
+	.show();  
 }
 
 function elegirBeca(){
@@ -89,9 +111,9 @@ function limpiar()
 	$("#fecha_ingreso").val("");
 	$("#foto").val("");
 	$("#empresa").val("");
-	$("#beca").val("");
+	$("#beca").val(0);
 	$("#sede").val("");
-
+	$("#vistaFoto").attr('src','');
 	$("#beca").prop("disabled",true);
 	$("#id").attr("status","");
 }
@@ -179,9 +201,10 @@ function guardaryeditar(e)
 
 	    success: function(datos)
 	    {                    
-	          bootbox.alert(datos);	          
-	          mostrarform(false);
-	          tabla.ajax.reload();
+	          alertify.alert("Registro de alumnos",datos, function(){
+				mostrarform(false);
+	          	tabla.ajax.reload();
+			  });	          
 	    }
 
 	});
@@ -212,7 +235,7 @@ function mostrar(idAlumno,nombre)
 		$("#fecha_nacimiento").val(data.fecha_nacimiento);
 		$("#fecha_ingreso").val(data.fecha_ingreso);
 		$("#foto").attr("rutaFoto",data.foto)
-		//$("#fotoDiv").hide();
+		$("#vistaFoto").attr('src','..' + data.foto);
 		$("#beca").val(data.beca);
 		$("#sede").val(data.sede);
 		listarConvenio(data.empresa);
