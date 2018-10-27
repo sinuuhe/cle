@@ -291,7 +291,7 @@ desired effect
           <ul class="treeview-menu">
             <li><a href="Alumnos.php">Alumnos</a></li>
             <li><a href="maestros.php">Maestros</a></li>
-            <li><a href="grupos.php">Grupos</a></li>
+            <li><a href="grupo.php">Grupos</a></li>
           </ul>
         </li>
         <li class="treeview">
