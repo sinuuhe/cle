@@ -57,7 +57,7 @@ switch ($_GET["op"]){
 
 
 			$rspta=$alumno->editar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$status,$empresa,$beca,$password,$sede);
-			echo $rspta ? "Alumno actualizado correctamente." .$id: "No se pudo actuailzar el alumno. Intente de nuevo por favor.";
+			echo $rspta ? "Alumno actualizado correctamente." : "No se pudo actuailzar el alumno. Intente de nuevo por favor.";
 		}
 	break;
 

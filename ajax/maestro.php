@@ -21,7 +21,7 @@ switch ($_GET["op"]){
 	case 'guardaryeditar':
 		if (empty($id)){
 			//get the new Id
-			$nuevoMaestroId = "M".Maestro::obtenerCantidad();
+			$nuevoMaestroId = "MA".Maestro::obtenerCantidad();
 			$password = strtoupper($nombre).strtoupper($apellidoP);
 			$ext = explode(".", $_FILES["foto"]["name"]);
 			$foto = $nuevoMaestroId. '.' . end($ext);

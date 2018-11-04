@@ -2,20 +2,18 @@
 require_once "../modelos/grupo.php";
 
 $grupo=new Grupo();
-
-$id=isset($_POST["id"])? limpiarCadena($_POST["id"]):"";
-$nombre=isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
-$apellidoP=isset($_POST["apellidoP"])? limpiarCadena($_POST["apellidoP"]):"";
-$apellidoM = isset($_POST["apellidoM"])? limpiarCadena($_POST["apellidoM"]):"";
-$telefono = isset($_POST["telefono"])? limpiarCadena($_POST["telefono"]):"";
-$celular = isset($_POST["celular"])? limpiarCadena($_POST["celular"]):"";
-$email = isset($_POST["email"])? limpiarCadena($_POST["email"]):"";
-$fecha_nacimiento = isset($_POST["fecha_nacimiento"])? limpiarCadena($_POST["fecha_nacimiento"]):"";
-$fecha_ingreso = isset($_POST["fecha_ingreso"])? limpiarCadena($_POST["fecha_ingreso"]):"";
-$foto = isset($_POST["foto"])? limpiarCadena($_POST["foto"]):"";
-$sede = 1;
-$status = isset($_POST["status"])? limpiarCadena($_POST["status"]):"";
-$password = isset($_POST["password"])? limpiarCadena($_POST["password"]):"";
+ 
+$idNivel  = isset($_POST["nivel"])? limpiarCadena($_POST["nivel"]):"" ;
+$idMaestro  = isset($_POST["idMaestro"])? limpiarCadena($_POST["idMaestro"]):"";
+$numDias  = isset($_POST["numDias"])? limpiarCadena($_POST["numDias"]):"";
+$dias  = isset($_POST["dias"])? limpiarCadena($_POST["dias"]):"";
+$fecha_inicio  = isset($_POST["fecha_inicio"])? limpiarCadena($_POST["fecha_inicio"]):"";
+$fecha_fin  = isset($_POST["fecha_fin"])? limpiarCadena($_POST["fecha_fin"]):"";
+$sede  = 1;
+$salon  = isset($_POST["salon"])? limpiarCadena($_POST["salon"]):"";
+$observacion  = isset($_POST["observacion"])? limpiarCadena($_POST["observacion"]):"";
+$horario_entrada  = isset($_POST["horario_entrada"])? limpiarCadena($_POST["horario_entrada"]):"";
+$horario_salida  = isset($_POST["horario_salida"])? limpiarCadena($_POST["horario_salida"]):"";
 
 switch ($_GET["op"]){
     case 'iniciar_niveles':
@@ -26,6 +24,7 @@ switch ($_GET["op"]){
             while ($reg = $rspta->fetch_object()) {
                 //---CHECAR DATOS DE NIVELES!!!---
                 $dataNiveles[] = array(
+					'id' => $reg->ID,
                     'nombre' => $reg->NOMBRE,
                     'curso' => $reg->CURSO,
                     'material' => $reg->MATERIAL_LIBRO,
@@ -62,13 +61,10 @@ switch ($_GET["op"]){
 	case 'guardaryeditar':
 		if (empty($id)){
 			//get the new Id
-			$nuevoMaestroId = "M".Maestro::obtenerCantidad();
-			$password = strtoupper($nombre).strtoupper($apellidoP);
-			$ext = explode(".", $_FILES["foto"]["name"]);
-			$foto = $nuevoMaestroId. '.' . end($ext);
-			$ruta = "/files/fotosMaestros/".$foto;
-			$rspta=$maestro->insertar($nuevoMaestroId,$nombre,$apellidoP,$apellidoM,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$ruta,$password,$sede);
-			echo $rspta ? "Maestro registrado correctamente." : "No se pudo registrar al maestro. Intente de nuevo por favor.";
+			$nuevoGrupoId = "G".Grupo::obtenerCantidad();
+			echo $horario_entrada;
+			$rspta=$grupo->insertar($nuevoGrupoId,$idNivel,$idMaestro,$numDias,$dias,$fecha_inicio,$fecha_fin,$sede,$salon,$observacion,$horario_entrada,$horario_salida);
+			echo $rspta ? "Grupo registrado correctamente." : "No se pudo registrar el grupo. Intente de nuevo por favor.";
 
 
 			//Foto
@@ -123,21 +119,17 @@ switch ($_GET["op"]){
 	break;
 
 	case 'listar':
-		$rspta=$maestro->listar();
+		$rspta=$grupo->listar();
  		//Vamos a declarar un array
  		$data= Array();
 
  		while ($reg=$rspta->fetch_object()){
  			$data[]=array(
- 				"0"=>(!$reg->status)?'<button class="btn btn-success" onclick="alta(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Alta</button>':
-					 '<button class="btn btn-danger" onclick="baja(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i> Baja</button>
-					 <button class="btn btn-warning" onclick="mostrar(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Editar</button>',
+ 				"0"=>$reg->ID_GRUPO,
  				"1"=>$reg->nombre,
- 				"2"=>$reg->apellidoP,
-                "3"=>$reg->apellidoM,
-                "4"=>$reg->telefono,
-                "5"=>($reg->status)?'<span class="label bg-green">Activo</span>':
-									'<span class="label bg-red">Baja</span>'
+                "2"=>$reg->DIAS,
+                "3"=>$reg->HORARIO_ENTRADA,
+                "4"=>$reg->HORARIO_SALIDA
  				);
  		}
  		$results = array(

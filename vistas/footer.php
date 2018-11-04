@@ -124,6 +124,6 @@
 <script src="../public/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.es.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <script src="../public/bower_components/bootstrap-select/js/bootstrap-select.min.js"></script>
-    
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>    
  </body>
 </html>

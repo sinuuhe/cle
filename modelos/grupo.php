@@ -19,10 +19,10 @@ Class Grupo
 	//Implementamos un método para insertar registros
 	public function insertar($id_grupo,$id_nivel,$id_maestro,$num_dias,$dias,$fecha_inicio,$fecha_fin,$sede,$salon,$observacion,$horario_entrada,$horario_salida)
 	{
-		
-		$sql="INSERT INTO grupos_activos (ID_GRUPO,ID_NIVEL,ID_MAESTRO,NUM_DIAS,DIAS,FECHA_INICIO,FECHA_FIN,SEDE,
+		echo $horario_entrada;
+		$sql="INSERT INTO grupos_activos (ID_GRUPO,ID_NIVEL,ID_MAESTRO,NUM_DIAS,DIAS,FECHA_INICIO,FEHA_FIN,SEDE,
         SALON,OBSERVACION,HORARIO_ENTRADA,HORARIO_SALIDA)
-		VALUES ('$id_grupo','$id_nivel','$id_maestro',$num_dias,'$dias',$fecha_inicio,'$fecha_fin',
+		VALUES ('$id_grupo','$id_nivel','$id_maestro',$num_dias,'$dias','$fecha_inicio','$fecha_fin',
 		$sede,$salon,'$observacion','$horario_entrada','$horario_salida')";
 		echo $sql;
 		return ejecutarConsulta($sql);
@@ -73,7 +73,7 @@ Class Grupo
 	//Implementar un método para listar los registros
 	public function listar()
 	{
-		$sql="SELECT * FROM grupos_activos";
+		$sql="SELECT concat (maestros.nombre,' ',maestros.apellidoP,' ',maestros.apellidoM) as nombre,grupos_activos.ID_GRUPO,grupos_activos.DIAS,grupos_activos.HORARIO_ENTRADA,grupos_activos.HORARIO_SALIDA  from maestros INNER join grupos_activos on grupos_activos.ID_MAESTRO = maestros.id";
 		return ejecutarConsulta($sql);		
     }
     

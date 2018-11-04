@@ -6,43 +6,49 @@
 var tabla;
 
 function init() {
+    mostrarform(false);
+    listarGrupos();
     listarNiveles();
     listarMaestros();
     togglePanel();
-}
-
-function togglePanel() {
-    $('.nav-pills a').on('shown.bs.tab', function (event) {
-        var nombre = $(event.target).text();         // active tab
-        if (nombre == "Libros Pagados") {
-            //listar_pagos();
-        }
-        var y = $(event.relatedTarget).text();  // previous tab
+    $("#fecha_inicio,#fecha_fin").datepicker({
+		format:"yyyy-mm-dd"
     });
-
+    $("#formulario").on("submit",function(e)
+	{
+		guardaryeditar(e);	
+    })
+    $('#horario_entrada').datetimepicker({
+        format: 'hh:mm:ss'
+    });
+    $('#horario_salida').datetimepicker({
+        format: 'hh:mm:ss'
+    });
 }
+
 function listarNiveles() {
+    alertify.loading || alertify.dialog('loading', function () {
+        return {
+            main: function (content) {
+                this.setContent(content);
+            },
+            setup: function () {
+                return {
+                    options: {
+                        basic: false,
+                        maximizable: false,
+                        resizable: true,
+                        padding: false,
+                        closable: false,
+                        movable: false,
+                        title: "Cargando contenido"
+                    }
+                };
+            }
+        };
+    });
     $(document).ajaxStart(function () {
-        alertify.loading || alertify.dialog('loading', function () {
-            return {
-                main: function (content) {
-                    this.setContent(content);
-                },
-                setup: function () {
-                    return {
-                        options: {
-                            basic: false,
-                            maximizable: false,
-                            resizable: true,
-                            padding: false,
-                            closable: false,
-                            movable: false,
-                            title: "Cargando contenido"
-                        }
-                    };
-                }
-            };
-        });
+        
         alertify.loading('<br><div class="fa-5x text-center">' +
                 '</div>');
     });
@@ -106,9 +112,9 @@ function listarMaestros() {
                 try {
                         $.each(data, function (key, maestro) {
                             
-                            $("#maestro").append(
+                            $("#idMaestro").append(
                                     '<option value = "' + maestro.id + '" data-content="' + maestro.nombre + ' ' + maestro.apellidoP + ' ' + maestro.apellidoM + '"></option>');
-                            $("#maestro").selectpicker('refresh');
+                            $("#idMaestro").selectpicker('refresh');
                         });
                 } catch (error) {
                     alertify.notify(error.message, 'error', 5, function () {
@@ -129,105 +135,7 @@ function resetForm() {
     $(".selectpicker").val('default');
     $(".selectpicker").selectpicker("refresh");
 }
-function listar_pagos() {
-    tabla = $('#tbllistado').dataTable({
-        responsive: {
-            details: {
-                display: $.fn.dataTable.Responsive.display.modal({
-                    header: function (row) {
-                        var data = row.data();
-                        return 'Detalles para ' + data[0] + ' ' + data[1];
-                    }
-                }),
-                renderer: $.fn.dataTable.Responsive.renderer.tableAll({
-                    tableClass: 'table'
-                })
-            }
-        },
-        columnDefs: [
-            {responsivePriority: 1, targets: 0},
-            {responsivePriority: 2, targets: -1},
-        ],
-        "aProcessing": true, //Activamos el procesamiento del datatables
-        "aServerSide": true, //Paginación y filtrado realizados por el servidor
-        dom: 'SBflrtip', //Definimos los elementos del control de tabla
-        buttons: [
-            {
-                extend: 'copyHtml5',
-                text: '<i class="fa fa-files-o"></i>',
-                titleAttr: 'Copiar Tabla'
-            },
-            {
-                extend: 'print',
-                text: '<i class="fa fa-print"></i>',
-                titleAttr: 'Imprimir Tabla',
-                messageTop: 'La información de este documento pertenece a la escuela CLE, derechos restringidos.'
-            },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="fa fa-file-pdf-o" aria-hidden="true"></i>',
-                titleAttr: 'Exportar a PDF',
-                messageTop: 'La información de este documento pertenece a la escuela CLE, derechos restringidos.',
-            },
-            {
-                extend: 'excelHtml5',
-                text: '<i class="fa fa-file-excel-o" aria-hidden="true"></i>',
-                titleAttr: 'Exportar a Excel',
-                messageTop: 'La información de este documento pertenece a la escuela CLE, derechos reservados.'
-            },
-            {
-                extend: 'colvis',
-                text: '<i class="fa fa-eye aria-hidden="true"></i>',
-                titleAttr: 'Ocultar y Mostrar Columnas'
-            },
-        ],
-        "ajax": {
-            url: '../ajax/pago_libro.php?op=listar',
-            type: "get",
-            dataType: "json",
-            error: function (e) {
-                console.log(e.responseText);
-            }
-        },
-        "bDestroy": true,
-        "lengthMenu": [[10, 20, 30, 50, -1], [10, 20, 30, 50, "All"]],
-        "order": [[0, "desc"]], //Ordenar (columna,orden)
-        "language": {
-            buttons: {
-                colvis: 'Vista de Columnas',
-                print: 'Imprimir',
-                copy: 'Copiar',
-                copyTitle: 'Añadido al portapapeles',
-                copySuccess: {
-                    _: '%d líneas copiadas',
-                    1: '1 línea copiada'
-                }
-            },
-            "sProcessing": "Procesando...",
-            "sLengthMenu": "Mostrar _MENU_ registros",
-            "sZeroRecords": "No se encontraron resultados",
-            "sEmptyTable": "Ningún dato disponible en esta tabla",
-            "sInfo": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "sInfoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "sInfoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "sInfoPostFix": "",
-            "sSearch": "Buscar:",
-            "sUrl": "",
-            "sInfoThousands": ",",
-            "sLoadingRecords": "Cargando...",
-            "oPaginate": {
-                "sFirst": "Primero",
-                "sLast": "Último",
-                "sNext": "Siguiente",
-                "sPrevious": "Anterior"
-            },
-            "oAria": {
-                "sSortAscending": ": Activar para ordenar la columna de manera ascendente",
-                "sSortDescending": ": Activar para ordenar la columna de manera descendente"
-            }
-        }
-    }).DataTable();
-}
+
 $.fn.serializeObject = function()
 {
    var o = {};
@@ -244,4 +152,97 @@ $.fn.serializeObject = function()
    });
    return o;
 };
+
+//Función Listar
+function listarGrupos()
+{
+	tabla=$('#tbllistado').dataTable(
+	{
+		"aProcessing": true,//Activamos el procesamiento del datatables
+	    "aServerSide": true,//Paginación y filtrado realizados por el servidor
+	    dom: 'Bfrtip',//Definimos los elementos del control de tabla
+	    buttons: [		          
+		            'copyHtml5',
+		            'excelHtml5',
+		            'csvHtml5',
+		            'pdf'
+		        ],
+		"ajax":
+				{
+					url: '../ajax/grupo.php?op=listar',
+					type : "get",
+					dataType : "json",						
+					error: function(e){
+						console.log(e.responseText);	
+					}
+				},
+		"bDestroy": true,
+		"iDisplayLength": 5,//Paginación
+	    "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
+	}).DataTable();
+}
+
+//Función mostrar formulario
+function mostrarform(flag)
+{
+	$("#fotoDiv").show();
+	limpiar();
+	if (flag)
+	{
+		$("#listadoregistros").hide();
+		$("#formularioregistros").show();
+		$("#btnGuardar").prop("disabled",false);
+		$("#btnagregar").hide();
+	}
+	else
+	{
+		$("#listadoregistros").show();
+		$("#formularioregistros").hide();
+		$("#btnagregar").show();
+	}
+}
+
+function limpiar()
+{
+$("#nivel").val("");
+$("#idMaestro").val("");
+$("#numDias").val("");
+$("#dias").val("");
+$("#horario_entrada").val("");
+$("#horario_salida").val("");
+$("#fecha_inicio").val("");
+$("#fecha_fin").val("");
+$("#salon").val("");
+$("#observaciones").val("");
+}
+
+function guardaryeditar(e)
+{
+	e.preventDefault(); //No se activará la acción predeterminada del evento
+	var formData = new FormData($("#formulario")[0]);
+    console.log(formData);
+    debugger;
+	$.ajax({
+		url: "../ajax/grupo.php?op=guardaryeditar",
+	    type: "POST",
+	    data: formData,
+	    contentType: false,
+	    processData: false,
+
+	    success: function(datos)
+	    {                    
+	          alertify.alert("Registro de grupo",datos, function(){
+				mostrarform(false);
+	          	tabla.ajax.reload();
+			  });	          
+	    }
+
+	});
+	limpiar();
+}
+function cancelarform()
+{
+	limpiar();
+	mostrarform(false);
+}
 init();
