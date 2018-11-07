@@ -294,6 +294,7 @@ desired effect
             <li><a href="maestros.php">Maestros</a></li>
             <li><a href="grupo.php">Grupos</a></li>
             <li><a href="nivel.php">Niveles</a></li>
+            <li><a href="libro.php">Libros</a></li>
           </ul>
         </li>
         <li class="treeview">
