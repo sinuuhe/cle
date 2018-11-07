@@ -24,7 +24,6 @@ Class Maestro
         fecha_ingreso,foto,status,password,sede)
 		VALUES ('$id','$nombre','$apellidoP','$apellidoM','$telefono',$celular,'$email',
 		'$fecha_nacimiento','$fecha_ingreso','$foto',1,'$password',$sede)";
-		echo $sql;
 		return ejecutarConsulta($sql);
 	}
 
