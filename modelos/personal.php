@@ -29,7 +29,7 @@ Class Personal
 	}
 
 	//Implementamos un método para editar registros
-	public function editar($id,$nombre,$apellidoP,$apellidoM,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$password,$sede)
+	public function editar($id,$nombre,$apellidoP,$apellidoM,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$password,$sede,$puesto)
 	{
 		$sql="UPDATE personal SET nombre = '$nombre',apellidoP = '$apellidoP',apellidoM = '$apellidoM',telefono = '$telefono',celular = '$celular',email = '$email',fecha_nacimiento = '$fecha_nacimiento',fecha_ingreso = '$fecha_ingreso',password = '$password',sede = '$sede', puesto = '$puesto' WHERE id='$id'";
 		return ejecutarConsulta($sql);
