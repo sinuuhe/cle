@@ -1,0 +1,30 @@
+           [
+            {
+                "extend": "copyHtml5",
+                "text": "<i class='fa fa-files-o'></i>Copiar Datos",
+                "titleAttr": "Copiar Tabla"
+            },
+            {
+                "extend": "print",
+                "text": "<i class='fa fa-print'></i> Imprimir",
+                "titleAttr": "Imprimir Tabla",
+                "messageTop": "La información de este documento pertenece a la escuela CLE, derechos restringidos."
+            },
+            {
+                "extend": "pdfHtml5",
+                "text": "<i class='fa fa-file-pdf-o' aria-hidden='true'></i> Exportar PDF",
+                "titleAttr": "Exportar a PDF",
+                "messageTop": "La información de este documento pertenece a la escuela CLE, derechos restringidos.",
+            },
+            {
+                "extend": "excelHtml5",
+                "text": "<i class='fa fa-file-excel-o' aria-hidden='true'></i>Exportar Excel",
+                "titleAttr": "Exportar a Excel",
+                "messageTop": "La información de este documento pertenece a la escuela CLE, derechos reservados."
+            },
+            {
+                "extend": "colvis",
+                "text": "<i class='fa fa-eye' aria-hidden='true'></i>OCultar",
+                "titleAttr": "Ocultar y Mostrar Columnas"
+            }
+        ]

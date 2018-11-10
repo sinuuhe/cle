@@ -6,11 +6,11 @@ require_once dirname(__DIR__, 1) . "/modelos/Alumnos.php";
 $pago_libro = new PagoLibro();
 $alumno = new Alumno();
 
-$id_libro=isset($_POST["libro"])? limpiarCadena($_POST["libro"]):"";
-$id_alumno=isset($_POST["alumno"])? limpiarCadena($_POST["alumno"]):"";
-$fecha_pago=date("Y-m-d H:i:s");
-$costo_libro=isset($_POST["libro_costo"])? limpiarCadena($_POST["libro_costo"]):"";
-$forma_pago=isset($_POST["forma_pago"])? limpiarCadena($_POST["forma_pago"]):"";
+$id_libro = isset($_POST["libro"]) ? limpiarCadena($_POST["libro"]) : "";
+$id_alumno = isset($_POST["alumno"]) ? limpiarCadena($_POST["alumno"]) : "";
+$fecha_pago = date("Y-m-d H:i:s");
+$costo_libro = isset($_POST["libro_costo"]) ? limpiarCadena($_POST["libro_costo"]) : "";
+$forma_pago = isset($_POST["forma_pago"]) ? limpiarCadena($_POST["forma_pago"]) : "";
 
 switch ($_GET["op"]) {
     case 'iniciar_selects':
@@ -55,37 +55,40 @@ switch ($_GET["op"]) {
         $rspta = $pago_libro->cancelar_pago($idpagolibro);
         echo $rspta ? "Categoría Desactivada" : "Categoría no se puede desactivar";
         break;
-
     case 'pagar':
-        $rspta = $pago_libro->pagar($fecha_pago,$id_alumno,$id_libro,$costo_libro,$forma_pago);
-        echo $rspta ? json_encode(array('verificar' => 'success', 'mensaje' => 'Pago realizado con éxito.')) :
-                json_encode(array('verificar' => 'error', 'mensaje' => 'Pago no realizado.'.$conexion->error));
+        $rspta = $pago_libro->pagar($fecha_pago, $id_alumno, $id_libro, $costo_libro, $forma_pago);
+        echo $rspta ? json_encode(array('verificar' => 'success', 'mensaje' => 'Pago realizado con éxito.', 'id_generado' => $conexion->insert_id)) :
+                json_encode(array('verificar' => 'error', 'mensaje' => 'Pago no realizado.' . $conexion->error));
         break;
-
     case 'listar_pago':
         $rspta = $pago_libro->listar_pago($idpagolibro);
         //Codificar el resultado utilizando json
         echo json_encode($rspta);
         break;
     case 'listar':
-         $rspta = $pago_libro->listar_pagos();
-        if($rspta){
+        $rspta = $pago_libro->listar_pagos();
+        if ($rspta) {
             
-        }else{
-             echo "Error al listar libros: " . $conexion->error;
+        } else {
+            echo "Error al listar libros: " . $conexion->error;
             exit();
         }
-       
+
         //Vamos a declarar un array
         $data = Array();
         while ($reg = $rspta->fetch_object()) {
             $data[] = array(
-                "0" => '<span data-var="matricula" class="idpago-' . $reg->id . '">' . $reg->libro . '</span>',
-                "1" => '<span data-var="nombre" class="idpago-' . $reg->id . '">' . $reg->alumno. '</span>',
-                "2" => '<span data-var="monto_pago"  class="idpago-' . $reg->id . '">' . $reg->fecha_pago . '</span>',
-                "3" => '<span data-var="descuento"  class="idpago-' . $reg->id . '">' . $reg->forma_pago . '</span>',
-                "4" => '$ <span data-var="total_pago"  class="idpago-' . $reg->id . '">' . $reg->total_pago . '</span>',
-                "5" => '<button class="btn btn-success" onclick="ver_recibo(' . $reg->id . ')"><i class="fa fa-eye"></i> Recibo</button>',
+                "0" => $reg->libro,
+                "1" => $reg->alumno ,
+                "2" => $reg->fecha_pago ,
+                "3" => $reg->forma_pago,
+                "4" => $reg->total_pago ,
+                "5" => '<form target="_blank" action="../impresiones/tickets/ticketPDF.php" method="POST">
+                            <input name="idpago" value="'.$reg->id.'" type="hidden" class="idpago">
+                            <input type="hidden" id="concepto" name="concepto" value="Pago de libro" />
+                            <input type="hidden" id="formato" name="formato" value="pago_libro"/>
+                            <button type="submit" class="btn btn-success btn-block"><i class="fa fa-eye"></i> Ver recibo</button>
+                        </form>',
             );
         }
         $results = array(

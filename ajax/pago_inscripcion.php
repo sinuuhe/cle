@@ -4,7 +4,7 @@ require_once dirname(__DIR__,1). "/modelos/PagoInscripcion.php";
 
 $pago_inscripcion=new PagoInscripcion();
 
-$idpagoinscripcion=isset($_POST["idpagoinscripcion"])? limpiarCadena($_POST["idpagoinscripcion"]):"";
+$idpagoinscripcion=isset($_POST["idpago"])? limpiarCadena($_POST["idpago"]):"";
 $pago=isset($_GET["pago"])? limpiarCadena($_GET["pago"]):"";
 $forma_pago=isset($_POST["forma_pago"])? limpiarCadena($_POST["forma_pago"]):"";
 
@@ -33,30 +33,34 @@ switch ($_GET["op"]){
  		while ($reg=$rspta->fetch_object()){
                     if($pago != 'ver_pagados'){
                         $data[]=array(
- 				"0"=>'<span data-var="matricula" class="idpago-'.$reg->id.'">'.$reg->matricula.'</span>',
- 				"1"=>'<span data-var="nombre" class="idpago-'.$reg->id.'">'.$reg->nombre.'</span>',
-                                /*"2"=>($reg->status)?'<span class="label bg-green">Pagado</span>':
- 				'<span class="label bg-red">Adeudo</span>',*/
-                                "2"=>'$ <span data-var="monto_pago"  class="idpago-'.$reg->id.'">'.$reg->monto_pago.'</span>',
-                                "3"=>'<span data-var="descuento"  class="idpago-'.$reg->id.'">'.$reg->descuento.' %</span>',
-                                "4"=>'$ <span data-var="total_pago"  class="idpago-'.$reg->id.'">'.$reg->total_pago.'</span>',
-                                "5"=>(!$reg->status)?'<button class="btn btn-danger" onclick="pagar('.$reg->id.')"><i class="fa fa-money"></i>  Pagar</button>':
- 					'<button class="btn btn-success" onclick="ver_recibo('.$reg->id.')"><i class="fa fa-eye"></i> Recibo</button>');
+ 				"0"=>$reg->matricula,
+ 				"1"=>$reg->nombre,
+                                "2"=>$reg->monto_pago,
+                                "3"=>$reg->descuento,
+                                "4"=>$reg->total_pago,
+                                "5"=>'<button data-id="'.$reg->id.'" class="btn btn-danger btn-block"><i class="fa fa-money"></i>  Pagar</button>');
                     }else{
                         $data[]=array(
- 				"0"=>'<span data-var="matricula" class="idpago-'.$reg->id.'">'.$reg->matricula.'</span>',
- 				"1"=>'<span data-var="nombre" class="idpago-'.$reg->id.'">'.$reg->nombre.'</span>',
-                                /*"2"=>($reg->status)?'<span class="label bg-green">Pagado</span>':
- 				'<span class="label bg-red">Adeudo</span>',*/
-                                "2"=>'$ <span data-var="monto_pago"  class="idpago-'.$reg->id.'">'.$reg->monto_pago.'</span>',
-                                "3"=>'<span data-var="descuento"  class="idpago-'.$reg->id.'">'.$reg->descuento.' %</span>',
-                                "4"=>'$ <span data-var="total_pago"  class="idpago-'.$reg->id.'">'.$reg->total_pago.'</span>',
-                                "5" => '<span data-var="fecha_pago"  class="idpago-' . $reg->id . '">' . $reg->fecha_pago . '</span>',
-                                "6"=>(!$reg->status)?'<button class="btn btn-danger" onclick="pagar('.$reg->id.')"><i class="fa fa-money"></i>  Pagar</button>':
- 					'<button class="btn btn-success" onclick="ver_recibo('.$reg->id.')"><i class="fa fa-eye"></i> Recibo</button>',
- 				);
+ 				"0"=>$reg->matricula,
+ 				"1"=>$reg->nombre,
+                                "2"=>$reg->monto_pago,
+                                "3"=>$reg->descuento,
+                                "4"=>$reg->total_pago,
+                                "5" =>$reg->fecha_pago,
+                                "6"=>'
+                                    <div class="text-center">
+                                    <form class="no-display-block" target="_blank" action="../impresiones/tickets/ticketPDF.php" method="POST">
+                                        <input name="idpago" value="'.$reg->id.'" type="hidden" class="idpago">
+                                        <input type="hidden" id="concepto" name="concepto" value="Pago de inscripción" />
+                                        <input type="hidden" id="formato" name="formato" value="pago_inscripcion"/>
+                                        <button type="submit" class="btn btn-success"> Ver recibo</button>
+                                    </form>'
+                                    . '<form class="no-display-block" target="_blank" action="../impresiones/tickets/inscripcionPDF.php" method="POST">
+                                        <input name="idpago" value="'.$reg->id.'" type="hidden" class="idpago">
+                                        <button type="submit" class="btn btn-info"> Acuse</button>
+                                    </form>
+                                    </div>');
                     }
- 			
  		}
  		$results = array(
  			"sEcho"=>1, //Información para el datatables

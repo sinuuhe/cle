@@ -10,10 +10,23 @@ require dirname(__DIR__, 1) . "/config/Conexion.php";
 
 Class PagoNomina {
 
-   
     //Implementamos nuestro constructor
     public function __construct() {
         
+    }
+
+    public function corte_caja($fecha_inicio, $fecha_fin) {
+        $sql = "SELECT pn.horas_trabajadas,m.fecha_ingreso,m.id as matricula,CONCAT(m.nombre, ' ', m.apellidoP, ' ', m.apellidoM) AS nombre,ga.ID_GRUPO, pn.monto_pago, pn.status,pn.fecha_pago, pn.id, pn.semana,pn.grupo
+        FROM maestros m 
+        INNER JOIN grupos_activos ga on ga.ID_MAESTRO=m.id 
+        INNER JOIN niveles n on ga.ID_NIVEL=n.ID 
+        INNER JOIN pago_nomina pn on m.id=pn.id_maestro and ga.ID_GRUPO=pn.id_grupo
+	WHERE (pn.fecha_pago BETWEEN '$fecha_inicio' AND '$fecha_fin') 
+            AND
+              (pn.status = 1)
+        ORDER BY pn.fecha_pago";
+
+        return ejecutarConsulta($sql);
     }
 
     //Implementamos un método para insertar registros
@@ -22,8 +35,6 @@ Class PagoNomina {
 		VALUES ('$id_alumno','$id_grupo_activo',$id_nivel,'$fecha_pago',$monto_pago,0,'$forma_pago')";
         return ejecutarConsulta($sql);
     }
-    
-   
 
     //Implementamos un método para cambiar estatus de pago a "pagado".
     public function pagar($id, $fecha_pago) {
@@ -38,7 +49,7 @@ Class PagoNomina {
     }
 
     //Implementar un método para listar los registros
-    public function listar_pagos($status,$semana) {
+    public function listar_pagos($status, $semana) {
         $sql = "SELECT pn.horas_trabajadas,m.fecha_ingreso,m.id as matricula,CONCAT(m.nombre, ' ', m.apellidoP, ' ', m.apellidoM) AS nombre,ga.ID_GRUPO, pn.monto_pago, pn.status,pn.fecha_pago, pn.id, pn.semana,pn.grupo
         FROM maestros m 
         INNER JOIN grupos_activos ga on ga.ID_MAESTRO=m.id 
@@ -50,12 +61,15 @@ Class PagoNomina {
 
     //Implementar un método para listar los registros
     public function listar_pago($id) {
-        $sql = "SELECT pn.horas_trabajadas,m.fecha_ingreso,m.id as matricula,CONCAT(m.nombre, ' ', m.apellidoP, ' ', m.apellidoM) AS nombre,ga.ID_GRUPO, pn.monto_pago, pn.status,pn.fecha_pago, pn.id, pn.semana,pn.grupo
-        FROM maestros m 
+        $sql = "SELECT pn.horas_trabajadas as horas,m.fecha_ingreso,m.id as matricula,
+            CONCAT(m.nombre, ' ', m.apellidoP, ' ', m.apellidoM) AS nombre,ga.ID_GRUPO,
+            pn.monto_pago as monto_pago, pn.status,pn.fecha_pago, pn.id, pn.semana,pn.grupo
+        FROM 
+        maestros m 
         INNER JOIN grupos_activos ga on ga.ID_MAESTRO=m.id 
         INNER JOIN niveles n on ga.ID_NIVEL=n.ID 
         INNER JOIN pago_nomina pn on m.id=pn.id_maestro and ga.ID_GRUPO=pn.id_grupo
-        WHERE pn.status = '$status' WHERE pe.id = '$id'";
+        WHERE pn.status = '1' AND pn.id='$id'";
         return ejecutarConsultaSimpleFila($sql);
     }
 
@@ -79,28 +93,29 @@ Class PagoNomina {
         }
         return $precio_hora;
     }
-    
-    public function obtenerNumSemana($fecha){
+
+    public function obtenerNumSemana($fecha) {
         $num_semana = date("W", strtotime($fecha));
-                
+
         return $num_semana;
     }
-    
-    public function obtenerSemanaInicio($fecha){
-        $semana=date("W", strtotime($fecha));
+
+    public function obtenerSemanaInicio($fecha) {
+        $semana = date("W", strtotime($fecha));
         $semana_obj = new DateTime();
-        $semana_obj->setISODate(2018,$semana);
-        $semana_start= $semana_obj->format('d-m-Y');
-        
+        $semana_obj->setISODate(2018, $semana);
+        $semana_start = $semana_obj->format('d-m-Y');
+
         return $semana_start;
     }
-    
-    public function obtenerSemanaFin($fecha){
-        $semana=date("W", strtotime($fecha));
+
+    public function obtenerSemanaFin($fecha) {
+        $semana = date("W", strtotime($fecha));
         $semana_obj = new DateTime();
-        $semana_obj->setISODate(2018,$semana,7);
-        $semana_final= $semana_obj->format('d-m-Y');
-        
+        $semana_obj->setISODate(2018, $semana, 7);
+        $semana_final = $semana_obj->format('d-m-Y');
+
         return $semana_final;
     }
+
 }

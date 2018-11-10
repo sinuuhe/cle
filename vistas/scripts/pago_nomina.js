@@ -5,11 +5,148 @@
  */
 var tabla;
 var fecha;
+var corte_caja;
+var generar_corte;
+var iniciarDatePicker;
 //Función que se ejecuta al inicio
 function init() {
     cambiarSemanaNomina();
     listar("ver_nopagados");
     actualizarTabla();
+}
+//Función para saber que tipo de usuario inicio sesión y así poder saber que le mostraremos al usuario
+function obtener_permisos() {
+    $.getJSON({
+        url: "../ajax/vistas_permisos.php",
+    }).done(function (data, textStatus, jqXHR) {
+        try {
+            permiso = data.permiso;
+            if (data.permiso == "admin") {
+                $('<button onclick="corte_caja()"  class="btn btn-default p" tabindex="0" aria-controls="tbllistado" type="button" \n\
+                title="Corte de caja" id="corte_caja"><span><i class="fa fa-scissors" aria-hidden="true"></i></span></button>\n\
+                ').appendTo($('.dt-buttons'));
+                iniciarFuncionesCorteCaja();
+            }
+        } catch (error) {
+            alertify.notify(error.message, 'error', 5, function () {});
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Algo ha fallado: " + textStatus + " " + jqXHR + " " + errorThrown);
+        }
+    });
+}
+function iniciarFuncionesCorteCaja() {
+    if (typeof corte_caja === 'undefined') {
+        corte_caja = function () {
+            alertify.dialog('confirm').
+                    set({
+                        transition: 'slide',
+                        message: '<div class="form-horizontal">\n\
+                                <h4>SELECIONA RANGO DE FECHAS:</h2>\n\
+                                <div class="form-group">\n\
+                                    <label for="fecha_inicio" class="col-sm-3 control-label">Fecha Inicio</label>\n\
+                                    <div class="col-sm-9 input-group date" data-provide="datepicker" id="fecha_inicio">\n\
+                                    <input id="fecha_i" required type="text" class="form-control custom-input" />\n\
+                                        <span class="input-group-addon">\n\
+                                            <span class="glyphicon glyphicon-calendar"></span>\n\
+                                        </span>\n\
+                                    </div>\n\
+                                </div>\n\
+                                <div class="form-group">\n\
+                                    <label for="fecha_fin" class="col-sm-3 control-label">Fecha Fin</label>\n\
+                                    <div class="col-sm-9 input-group date" data-provide="datepicker" id="fecha_fin">\n\
+                                    <input id="fecha_f" required type="text" class="form-control custom-input" />\n\
+                                        <span class="input-group-addon">\n\
+                                            <span class="glyphicon glyphicon-calendar"></span>\n\
+                                        </span>\n\
+                                    </div>\n\
+                                </div>\n\
+                        </div>',
+                        reverseButtons: true,
+                        labels: {
+                            ok: 'Confirmar',
+                            cancel: 'Cancelar!'
+                        },
+                        onshow: function () {
+                            iniciarDatePicker();
+                        },
+                        onok: function (closeEvent) {
+                            var fecha_inicio = moment($('#fecha_inicio').datepicker("getDate")).format("YYYY-MM-DD") + " 00:00:00";
+                            var fecha_fin = moment($('#fecha_fin').datepicker("getDate")).format("YYYY-MM-DD") + ' 23:59:59';
+                            console.log(fecha_inicio + " " + fecha_fin);
+                            if (fecha_inicio == "Invalid date 00:00:00") {
+                                closeEvent.cancel = true;
+                                alertify.error('Selecciona la fecha de incio');
+                                $('#fecha_i').focus();
+                            } else if (fecha_fin == "Invalid date 23:59:59") {
+                                closeEvent.cancel = true;
+                                alertify.error('Selecciona la fecha final');
+                                $('#fecha_f').focus();
+                            } else {
+                                generar_corte(fecha_inicio, fecha_fin);
+                                $("#generar_corte").remove();
+                            }
+                        },
+                        oncancel: function () {
+                            alertify.error('Cancelado');
+                        }
+                    })
+                    .setHeader('<span class="fa fa-scissors" aria-hidden="true"'
+                            + 'style="vertical-align:middle;color:#000000;">'
+                            + '</span> Corte de Caja Nóminas')
+                    .show();
+        }
+    }
+    if (typeof generar_corte === 'undefined') {
+        generar_corte = function (fecha_inicio, fecha_fin) {
+            $('<form>', {
+                "id": "generar_corte",
+                "method": "POST",
+                "target": "_blank",
+                "html": '<input type="hidden" id="fecha_i" name="fecha_i" value="' + fecha_inicio + '" />' +
+                        '<input type="hidden" id="fecha_f" name="fecha_f" value="' + fecha_fin + '" />' +
+                        '<input type="hidden" id="tipo" name="tipo" value="Nominas" />',
+                "action": '../impresiones/tickets/corteCaja.php'
+            }).appendTo(document.body).submit();
+        }
+    }
+    if (typeof iniciarDatePicker === 'undefined') {
+        iniciarDatePicker = function () {
+            $("#fecha_inicio").datepicker({
+                language: 'es',
+                clearBtn: true,
+                calendarWeeks: true,
+                autoclose: true,
+                todayHighlight: true,
+                format: 'dd/mm/yyyy',
+                show: true,
+                endDate: new Date()
+            }).on('changeDate', function (selected) {
+                var startDate = new Date(selected.date.valueOf());
+                $('#fecha_fin').datepicker('setStartDate', startDate);
+            }).on('clearDate', function () {
+                $('#fecha_fin').datepicker('setStartDate', null);
+            }).datepicker('update', new Date());
+
+            $("#fecha_fin").datepicker({
+                language: 'es',
+                clearBtn: true,
+                calendarWeeks: true,
+                autoclose: true,
+                todayHighlight: true,
+                format: 'dd/mm/yyyy',
+                show: true,
+                endDate: new Date()
+            }).on('changeDate', function (selected) {
+                var endDate = new Date(selected.date.valueOf());
+                $('#fecha_inicio').datepicker('setEndDate', endDate);
+            }).on('clearDate', function () {
+                $('#fecha_inicio').datepicker('setEndDate', null);
+            }).datepicker('update', new Date());
+        }
+    }
+
 }
 //Función para  cambiar los labels de la vista, para que se pueda visualizar el número de semana y las fechas correspondientes.
 function cambiarSemanaNomina() {
@@ -49,20 +186,6 @@ function iniciarDatePicker() {
     }).datepicker('update', new Date());
 
     fecha = moment($('#datepicker').datepicker("getDate")).format("YYYY-MM-DD");
-}
-function actualizarTabla() {
-    $(window).resize(function () {
-        if (this.resizeTO)
-            clearTimeout(this.resizeTO);
-        this.resizeTO = setTimeout(function () {
-            $(this).trigger('resizeEnd');
-        }, 500);
-    });
-    $(window).bind("resizeEnd", function () {
-        if (tabla !== undefined && tabla !== null) {
-            tabla.ajax.reload();//Se actualiza la tabla porque se redimensiona la pantalla. (FECHA_PAGO)
-        }
-    });
 }
 //Función listar pagos de extras.
 //La función recibe la variable pago que contiene la bandera para saber si listar los adeudos o los pagos.
@@ -179,6 +302,7 @@ function listar(pago) {
             }
         }
     }).DataTable();
+    obtener_permisos();
 }
 //Función para hacer el cambio en las columnas correspondientes de la tabla, dependiendo de la acción que se deseé, así como habilitar e inhabilitar  los botones. 
 //La variable pago, solo puede recibir dos valores "ver_pagados" o "ver_nopagados".
@@ -310,6 +434,7 @@ function pagar(idpagonomina) {
                                     alertify.notify(respuesta.mensaje, respuesta.verificar, 5, function () {
                                     });
                                     fecha = respuesta.fecha;
+                                    ver_recibo(idpagonomina);
                                     tabla.ajax.reload();
                                 } catch (error) {
                                     alertify.notify(error.message, 'error', 5, function () {
@@ -331,10 +456,8 @@ function ver_recibo(idpagonomina) {
     $('<form>', {
         "method": "POST",
         "target": "_blank",
-        "html": '<input type="hidden" id="idpagonomina" name="idpagonomina" value="' + idpagonomina + '" />' +
-                '<input type="hidden" id="concepto" name="concepto" value="Pago de Nómina" />' +
-                '<input type="hidden" id="tipo" name="formato" value="pago_nomina" />',
-        "action": '../impresiones/tickets/ticketPDF.php'
+        "html": '<input type="hidden" id="idpagonomina" name="idpagonomina" value="' + idpagonomina + '" />',
+        "action": '../impresiones/tickets/reciboNominaPDF.php'
     }).appendTo(document.body).submit();
 }
 

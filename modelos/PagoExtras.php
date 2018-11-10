@@ -6,13 +6,28 @@
  * and open the template in the editor.
  */
 //Incluímos inicialmente la conexión a la base de datos
-require dirname(__DIR__,1) . "/config/Conexion.php";
+require dirname(__DIR__, 1) . "/config/Conexion.php";
 
 Class PagoExtras {
 
     //Implementamos nuestro constructor
     public function __construct() {
         
+    }
+
+    public function corte_caja($fecha_inicio, $fecha_fin) {
+        $sql = "SELECT a.id AS matricula,CONCAT(a.nombre, ' ', a.apellidoP, ' ', a.apellidoM) AS nombre,aga.ID_GRUPO,CONCAT(n.CURSO,' - ' ,n.NOMBRE) AS nivel, pe.monto_pago, pe.status,pe.fecha_pago, pe.id, pe.FORMA_PAGO
+            FROM alumnos a 
+            INNER JOIN alumnos_grupos_activos aga on a.id=aga.ID_ALUMNO 
+            INNER JOIN grupos_activos ga on ga.ID_GRUPO=aga.ID_GRUPO 
+            INNER JOIN niveles n on ga.ID_NIVEL=n.ID
+            INNER JOIN pago_extras pe on a.id=pe.id_alumno and ga.ID_GRUPO=pe.id_grupo_activo and ga.ID_NIVEL=pe.ID_NIVEL 
+	WHERE (pe.fecha_pago BETWEEN '$fecha_inicio' AND '$fecha_fin') 
+            AND
+              (pe.status = 1)
+        ORDER BY pe.fecha_pago";
+
+        return ejecutarConsulta($sql);
     }
 
     //Implementamos un método para insertar registros
@@ -36,7 +51,7 @@ Class PagoExtras {
 
     //Implementar un método para listar los registros
     public function listar_pagos($status) {
-         $sql = "SELECT a.id AS matricula,CONCAT(a.nombre, ' ', a.apellidoP, ' ', a.apellidoM) AS nombre,aga.ID_GRUPO,CONCAT(n.CURSO,' - ' ,n.NOMBRE) AS nivel, pe.monto_pago, pe.status,pe.fecha_pago, pe.id, pe.FORMA_PAGO
+        $sql = "SELECT a.id AS matricula,CONCAT(a.nombre, ' ', a.apellidoP, ' ', a.apellidoM) AS nombre,aga.ID_GRUPO,CONCAT(n.CURSO,' - ' ,n.NOMBRE) AS nivel, pe.monto_pago, pe.status,pe.fecha_pago, pe.id, pe.FORMA_PAGO
             FROM alumnos a 
             INNER JOIN alumnos_grupos_activos aga on a.id=aga.ID_ALUMNO 
             INNER JOIN grupos_activos ga on ga.ID_GRUPO=aga.ID_GRUPO 
@@ -45,7 +60,7 @@ Class PagoExtras {
         return ejecutarConsulta($sql);
     }
 
-     //Implementar un método para listar los registros
+    //Implementar un método para listar los registros
     public function listar_pago($id) {
         $sql = "SELECT a.id AS matricula,CONCAT(a.nombre, ' ', a.apellidoP, ' ', a.apellidoM) AS nombre,aga.ID_GRUPO,CONCAT(n.CURSO,' - ' ,n.NOMBRE) AS nivel, pe.monto_pago, pe.status,pe.fecha_pago, pe.id, pe.FORMA_PAGO
             FROM alumnos a 
@@ -55,6 +70,5 @@ Class PagoExtras {
             INNER JOIN pago_extras pe on a.id=pe.id_alumno and ga.ID_GRUPO=pe.id_grupo_activo and ga.ID_NIVEL=pe.ID_NIVEL WHERE pe.id = '$id'";
         return ejecutarConsultaSimpleFila($sql);
     }
-   
 
 }

@@ -1,19 +1,13 @@
 <?php
 //Activamos el almacenamiento en el buffer
-//ob_start();
-//session_start();
-
-//if (!isset($_SESSION["nombre"]))
-//{
-//  header("Location: login.html");
-//}
-//else
-//{
+ob_start();
+session_start();
+if (!isset($_SESSION["nombre"])){
+    header("Location: login.php");
+    exit();
+}
 require 'header.php';
-
-//if ($_SESSION['almacen']==1)
-//{
-//
+if ($_SESSION['permiso']==1){
 ?>
 <!--Contenido-->
       <!-- Content Wrapper. Contains page content -->
@@ -105,7 +99,7 @@ require 'header.php';
                             <label>Fecha de ingreso:</label>
                             <input data-provider = "datepicker" type="text" class="form-control" name="fecha_ingreso" id="fecha_ingreso" maxlength="50" placeholder="Fecha ingreso" required>
                           </div>
-                          <div id = "fotoDiv"class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                          <div id = "fotoDiv" class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Foto:</label>
                             <input type="file" class="form-control" data-rutaFoto = "" name="foto" id="foto" maxlength="50" placeholder="Foto">
                           </div>
@@ -132,18 +126,15 @@ require 'header.php';
     </div><!-- /.content-wrapper -->
   <!--Fin-Contenido-->
 <?php
-//}
-//else
-//{
-  //require 'noacceso.php';
-//}
+}
+else{
+  require 'noacceso.php';
+}
 
 require 'footer.php';
 ?>
 <script type="text/javascript" src="scripts/Alumnos.js"></script>
-<?php 
-//}
-//ob_end_flush();
-?>
 
+<?php 
+ob_end_flush();
 
