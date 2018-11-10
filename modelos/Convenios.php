@@ -11,24 +11,24 @@ Class Convenio
 	}
 
 	//Implementamos un método para insertar registros
-	public function insertar($nombre,$desMensualidad,$desInscripcion)
+	public function insertar($id,$nombre,$desMensualidad,$desInscripcion)
 	{
 		$sql="INSERT INTO convenios (ID,NOMBRE,DES_MENSUALIDAD,DES_INSCRIPCION)
-		VALUES (0,'$nombre',$desMensualidad,$desInscripcion)";
+		VALUES ($id,'$nombre',$desMensualidad,$desInscripcion)";
 		return ejecutarConsulta($sql);
 	}
 
 	//Implementamos un método para editar registros
 	public function editar($id,$nombre,$desMensualidad,$desInscripcion)
 	{
-		$sql="UPDATE convenios SET NOMBRE = '$nombre',DES_MENSUALIDAD = $desMensualidad, DES_INSCRIPCION = $desInscripcion WHERE id='$id'";
+		$sql="UPDATE convenios SET NOMBRE = '$nombre',DES_MENSUALIDAD = $desMensualidad, DES_INSCRIPCION = $desInscripcion WHERE id=$id";
 		return ejecutarConsulta($sql);
 	}
 
 	//Implementar un método para mostrar los datos de un registro a modificar
 	public function mostrar($id)
 	{
-		$sql="SELECT * FROM convenios WHERE id='$id'";
+		$sql="SELECT * FROM convenios WHERE id=$id";
 		return ejecutarConsultaSimpleFila($sql);
 	}
 
@@ -39,9 +39,9 @@ Class Convenio
 		return ejecutarConsulta($sql);		
 	}
 	//Implementar un método para listar los registros y mostrar en el select
-	public function select()
+	public function eliminar($id)
 	{
-		$sql="SELECT * FROM convenios where condicion=1";
+		$sql="delete from convenios WHERE id=$id";
 		return ejecutarConsulta($sql);		
 	}
 }

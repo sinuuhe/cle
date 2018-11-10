@@ -67,27 +67,8 @@ switch ($_GET["op"]){
 			$rspta=$grupo->insertar($nuevoGrupoId,$idNivel,$idMaestro,$numDias,$dias,$fecha_inicio,$fecha_fin,$sede,$salon,$observacion,$horario_entrada,$horario_salida);
 			echo $rspta ? "Grupo registrado correctamente." : "No se pudo registrar el grupo. Intente de nuevo por favor.";
 
-
-			//Foto
-			
-			if ($_FILES['foto']['type'] == "image/jpg" || $_FILES['foto']['type'] == "image/jpeg" || $_FILES['foto']['type'] == "image/png")
-			{
-				
-				move_uploaded_file($_FILES["foto"]["tmp_name"], "../files/fotosMaestros/" . $foto);
-			}
 		}
 		else {
-			$ext = explode(".", $_FILES["foto"]["name"]);
-			$foto = $id. '.' . end($ext);
-			$ruta = "/files/fotosMaestros/".$foto;
-
-			if ($_FILES['foto']['type'] == "image/jpg" || $_FILES['foto']['type'] == "image/jpeg" || $_FILES['foto']['type'] == "image/png")
-			{
-				
-				move_uploaded_file($_FILES["foto"]["tmp_name"], "../files/fotosMaestros/" . $foto);
-			}
-
-
 			$rspta=$maestro->editar($id,$nombre,$apellidoP,$apellidoM,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$ruta,$password,$sede);
 			echo $rspta ? "Maestro actualizado correctamente.": "No se pudo actuailzar el maestro. Intente de nuevo por favor.";
 		}
@@ -142,5 +123,6 @@ switch ($_GET["op"]){
  		echo json_encode($results);
 
 	break;
+	
 }
 ?>
