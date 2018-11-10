@@ -63,7 +63,7 @@ require 'header.php';
 
 require 'footer.php';
 ?>
-<script type="text/javascript" src="scripts/Alumnos.js"></script>
+<script type="text/javascript" src="scripts/asistencia.js"></script>
 <?php 
 //}
 //ob_end_flush();
