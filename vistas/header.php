@@ -51,10 +51,8 @@ if (strlen(session_id()) < 1)
     </head>
     <body class="hold-transition skin-blue sidebar-mini" style="body { padding-right: 0 !important }">
         <div class="wrapper">
-
             <!-- Main Header -->
             <header class="main-header">
-
                 <!-- Logo -->
                 <a href="index2.html" class="logo">
                     <!-- mini logo for sidebar mini 50x50 pixels -->
@@ -62,7 +60,6 @@ if (strlen(session_id()) < 1)
                     <!-- logo for regular state and mobile devices -->
                     <span class="logo-lg"><b>CLE</b>MORELIA</span>
                 </a>
-
                 <!-- Header Navbar -->
                 <nav class="navbar navbar-static-top" role="navigation">
                     <!-- Sidebar toggle button-->
@@ -158,8 +155,10 @@ if (strlen(session_id()) < 1)
                     <!-- Sidebar Menu -->
                     <ul id="permiso-menu" class="sidebar-menu" data-widget="tree">
 
+
                     </ul>
                     <!-- /.sidebar-menu -->
                 </section>
                 <!-- /.sidebar -->
             </aside>
+

@@ -1,9 +1,9 @@
 <?php 
-require_once "../modelos/Alumnos.php";
+require_once "../modelos/asistencia.php";
 
-$alumno=new Alumno();
+$asistencia=new Asistencia();
 
-$id=isset($_POST["id"])? limpiarCadena($_POST["id"]):"";
+$idGrupo=isset($_POST["idGrupo"])? limpiarCadena($_POST["idGrupo"]):"";
 $nombre=isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
 $apellidoP=isset($_POST["apellidoP"])? limpiarCadena($_POST["apellidoP"]):"";
 $apellidoM = isset($_POST["apellidoM"])? limpiarCadena($_POST["apellidoM"]):"";
@@ -32,7 +32,7 @@ switch ($_GET["op"]){
 			$ext = explode(".", $_FILES["foto"]["name"]);
 			$foto = $nuevoIdAlumno. '.' . end($ext);
 			$ruta = "/files/fotosAlumnos/".$foto;
-			$rspta=$alumno->insertar($nuevoIdAlumno,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$ruta,$empresa,$beca,$password,$sede);
+			$rspta=$asistencia->insertar($nuevoIdAlumno,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$ruta,$empresa,$beca,$password,$sede);
 			echo $rspta ? "Alumno registrado correctamente." : "No se pudo registrar el alumno. Intente de nuevo por favor.";
 
 
@@ -56,61 +56,44 @@ switch ($_GET["op"]){
 			}
 
 
-			$rspta=$alumno->editar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$status,$empresa,$beca,$password,$sede);
+			$rspta=$asistencia->editar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$status,$empresa,$beca,$password,$sede);
 			echo $rspta ? "Alumno actualizado correctamente." : "No se pudo actuailzar el alumno. Intente de nuevo por favor.";
 		}
-	break;
-
-	case 'cancelar_pago':
-		$rspta=$alumno->cancelar_pago($idcategoria);
- 		echo $rspta ? "Categoría Desactivada" : "Categoría no se puede desactivar";
-	break;
-
-	case 'pagar':
-		$rspta=$alumno->pagar($idcategoria,date("Y-m-d H:i:s"),"TARJETA DEBITO");
- 		echo $rspta ? "Categoría activada" : "Categoría no se puede activar";
-	break;
-
-	case 'baja':
-		$rspta=$alumno->baja($id);
- 		echo $rspta ? "Alumno dado de baja correctamente" : "Alumno no se puede dar de baja";
-	break;
-
-	case 'alta':
-		$rspta=$alumno->alta($id);
- 		echo $rspta ? "Alumno dado de alta correctamente" : "Alumno no se puede dar de alta";
-	break;
+    break;
+    
+    case 'listar':
+        
+    break;
 
 	case 'mostrar':
-		$rspta=$alumno->mostrar($id);
+		$rspta=$asistencia->mostrar($id);
  		//Codificar el resultado utilizando json
  		echo json_encode($rspta);
 	break;
 
-	case 'listar':
-		$rspta=$alumno->listar();
+	case 'obtenerAlumnosYNoClases':
+		$rspta=$asistencia->listarAlumnos($idGrupo);
  		//Vamos a declarar un array
  		$data= Array();
+        $numClass=$asistencia->obtenerCantidadDeClases($idGrupo);
 
  		while ($reg=$rspta->fetch_object()){
  			$data[]=array(
- 				"0"=>(!$reg->status)?'<button class="btn btn-success" onclick="alta(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Alta</button>':
-					 '<button class="btn btn-danger" onclick="baja(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i> Baja</button>
-					 <button class="btn btn-warning" onclick="mostrar(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Editar</button>',
- 				"1"=>$reg->nombre,
- 				"2"=>$reg->apellidoP,
-                "3"=>$reg->apellidoM,
-                "4"=>($reg->status)?'<span class="label bg-green">Activo</span>':
-									'<span class="label bg-red">Baja</span>'
+ 				"0"=>$reg->ID_ALUMNO,
+ 				"1"=>$reg->ID_GRUPO,
+                "2"=>$reg->NOMBRE,
+                "4"=>$numClass
  				);
- 		}
+         }
+
  		$results = array(
  			"sEcho"=>1, //Información para el datatables
  			"iTotalRecords"=>count($data), //enviamos el total registros al datatable
  			"iTotalDisplayRecords"=>count($data), //enviamos el total registros a visualizar
- 			"aaData"=>$data);
- 		echo json_encode($results);
+             "aaData"=>$data);
 
+ 		echo json_encode($results);
+        
 	break;
 }
 ?>
