@@ -33,23 +33,26 @@ switch ($_GET["op"]){
  		while ($reg=$rspta->fetch_object()){
                     if($pago != 'ver_pagados'){
                         $data[]=array(
-                            "0"=>'<span data-var="matricula" class="idpago-'.$reg->id.'">'.$reg->matricula.'</span>',
-                            "1"=>'<span data-var="nombre" class="idpago-'.$reg->id.'">'.$reg->nombre.'</span>',
-                            "2"=>'<span data-var="id_grupo" class="idpago-'.$reg->id.'">'.$reg->ID_GRUPO.'</span>',
-                            "3"=>'<span data-var="nivel" class="idpago-'.$reg->id.'">'.$reg->nivel.'</span>',
-                            "4"=>'$ <span data-var="monto_pago"  class="idpago-'.$reg->id.'">'.$reg->monto_pago.'</span>',
-                            "5"=>(!$reg->status)?'<button class="btn btn-danger" onclick="pagar('.$reg->id.')"><i class="fa fa-money"></i>  Pagar</button>':
-                                '<button class="btn btn-success" onclick="ver_recibo('.$reg->id.')"><i class="fa fa-eye"></i> Recibo</button>');   
+                            "0"=>$reg->matricula,
+                            "1"=>$reg->nombre,
+                            "2"=>$reg->ID_GRUPO,
+                            "3"=>$reg->nivel,
+                            "4"=>$reg->monto_pago,
+                            "5"=>'<button data-id="'.$reg->id.'" class="btn btn-danger btn-block"><i class="fa fa-money"></i>  Pagar</button>');   
                     }else{
                         $data[]=array(
-                            "0"=>'<span data-var="matricula" class="idpago-'.$reg->id.'">'.$reg->matricula.'</span>',
-                            "1"=>'<span data-var="nombre" class="idpago-'.$reg->id.'">'.$reg->nombre.'</span>',
-                            "2"=>'<span data-var="id_grupo" class="idpago-'.$reg->id.'">'.$reg->ID_GRUPO.'</span>',
-                            "3"=>'<span data-var="nivel" class="idpago-'.$reg->id.'">'.$reg->nivel.'</span>',
-                            "4"=>'$ <span data-var="monto_pago"  class="idpago-'.$reg->id.'">'.$reg->monto_pago.'</span>',
-                            "5" => '<span data-var="fecha_pago"  class="idpago-' . $reg->id . '">' . $reg->fecha_pago . '</span>',
-                            "6"=>(!$reg->status)?'<button class="btn btn-danger" onclick="pagar('.$reg->id.')"><i class="fa fa-money"></i>  Pagar</button>':
-                                '<button class="btn btn-success" onclick="ver_recibo('.$reg->id.')"><i class="fa fa-eye"></i> Recibo</button>');   
+                            "0"=>$reg->matricula,
+                            "1"=>$reg->nombre,
+                            "2"=>$reg->ID_GRUPO,
+                            "3"=>$reg->nivel,
+                            "4"=>$reg->monto_pago,
+                            "5"=>$reg->fecha_pago,
+                            "6"=>'<form target="_blank" action="../impresiones/tickets/ticketPDF.php" method="POST">
+                                        <input name="idpago" value="'.$reg->id.'" type="hidden" class="idpago">
+                                        <input type="hidden" id="concepto" name="concepto" value="Pago de extra" />
+                                        <input type="hidden" id="formato" name="formato" value="pago_extra"/>
+                                        <button type="submit" class="btn btn-success btn-block"><i class="fa fa-eye"></i> Ver recibo</button>
+                                    </form>');   
                     }
  		}
  		$results = array(

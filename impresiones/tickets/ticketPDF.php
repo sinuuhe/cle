@@ -9,16 +9,15 @@ switch ($_POST["formato"]) {
         $obj= new PagoExtras();
         $mes='Pago de extra del mes de ';
         break;
+    case "pago_libro":
+        require_once dirname(__DIR__, 2) . "/modelos/PagoLibro.php";
+        $obj= new PagoLibro();
+        $mes='Pago de libro en el mes de ';
+        break;
     case "pago_curso":
         require_once dirname(__DIR__, 2) . "/modelos/PagoCurso.php";
         $obj= new PagoCurso();
         $mes='Pago del curso del mes de ';
-        break;
-    case "pago_nomina":
-        require_once dirname(__DIR__, 2) . "/modelos/PagoNomina.php";
-        $obj= new PagoNomina();
-        $mes='Pago de nómina del mes de ';
-
         break;
     case "pago_inscripcion":
         require_once dirname(__DIR__, 2) . "/modelos/PagoInscripcion.php";
@@ -30,13 +29,13 @@ switch ($_POST["formato"]) {
         break;
 }
 
-$id=isset($_POST["id"])? limpiarCadena($_POST["id"]):"";
+$id=isset($_POST["idpago"])? limpiarCadena($_POST["idpago"]):"";
 $concepto=isset($_POST["concepto"])? limpiarCadena($_POST["concepto"]):"";
-
 $rspta=$obj->listar_pago($id);
 $nivel=$rspta->nivel?$rspta->nivel:$nivel;
 $mes=$mes.strftime("%B",strtotime($rspta->fecha_pago));
-
+$campo=$rspta->libro?"Libro: ":"Curso: ";
+$campo1=$rspta->libro?$rspta->libro:$nivel;
 $html  =  '<div class="tamano">
 		<div class="row">
 
@@ -105,11 +104,11 @@ $html  =  '<div class="tamano">
 			</div>
 
 			<div class="col s12 m12 l12 xl12 sinEspacioParrafo">
-				<p><b>Curso:</b></p>
+				<p><b>'.$campo.'</b></p>
 			</div>
 
 			<div class="col s12 m12 l12 xl12">
-				<p class="sinEspacio">'.$nivel.'</p>
+				<p class="sinEspacio">'.$campo1.'</p>
 			</div>
 
 			<div class="col s12 m12 l12 xl12 sinEspacioParrafo">

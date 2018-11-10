@@ -366,3 +366,21 @@ $('ul.treeview-menu a').filter(function() {
 
     $('[data-toggle="tooltip"]').tooltip()
 })
+
+
+    $.ajax({
+        url: "../ajax/vistas_menu.php",
+        dataType: 'html'
+    }).done(function (data, textStatus, jqXHR) {
+        try {
+         $("#permiso-menu").append(data);
+        } catch (error) {
+            alertify.notify(error.message, 'error', 5, function () {});
+        }
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+        if (console && console.log) {
+            console.log("Algo ha fallado: " + textStatus + " " + jqXHR + " " + errorThrown);
+        }
+    });
+    
+   

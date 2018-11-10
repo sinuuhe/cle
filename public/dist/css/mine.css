@@ -7,6 +7,13 @@ and open the template in the editor.
     Created on : 04-oct-2018, 2:49:54
     Author     : betoo
 */
+.btn-app>span>.fa, .btn-app>.glyphicon, .btn-app>.ion {
+    font-size: 20px;
+    display: block;
+}
+.bg-white{
+    background-color: white;
+}
 .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
     width: 100%;
 }
@@ -25,7 +32,9 @@ and open the template in the editor.
     box-shadow: none;
     border-radius: 5px;
 }
-
+.no-display-block{
+    display: inline;
+}
 /* Extra small devices (phones, less than 768px) */
 /* No media query since this is the default in Bootstrap */
 
@@ -58,7 +67,7 @@ and open the template in the editor.
 /* Large devices (large desktops, 1200px and up) */
 @media (min-width: 1200px) {
 .alertify .ajs-dialog {
-    max-width: 50%; 
+    max-width: 40%; 
     min-height: 137px;
     background-color: #f4f4f4;
     border: 1px solid #ddd;

@@ -4,7 +4,7 @@ require_once dirname(__DIR__,1). "/modelos/PagoCurso.php";
 
 $pago_curso=new PagoCurso();
 
-$idpagocurso=isset($_POST["idpagocurso"])? limpiarCadena($_POST["idpagocurso"]):"";
+$idpagocurso=isset($_POST["idpago"])? limpiarCadena($_POST["idpago"]):"";
 $pago=isset($_GET["pago"])? limpiarCadena($_GET["pago"]):"";
 $forma_pago=isset($_POST["forma_pago"])? limpiarCadena($_POST["forma_pago"]):"";
 
@@ -29,38 +29,44 @@ switch ($_GET["op"]){
             $rspta=$pago_curso->listar_pagos($pago=='ver_pagados');
  		//Vamos a declarar un array
  		$data= Array();
-
  		while ($reg=$rspta->fetch_object()){
                     $descuentos=$pago_curso->obtener_descuento($reg->COSTO, $reg->beca);
                     $semanasDeRetraso=$pago_curso->semanas_retraso($reg->FECHA_INICIO);
                     $totalRetraso=$pago_curso->obtener_retraso($semanasDeRetraso);
                     $totalAPagar=$pago_curso->obtener_total($reg->COSTO, $totalRetraso, $descuentos); 
-                    $pago_curso->actualizar_pago($reg->ID_PAGO, $semanasDeRetraso, $totalRetraso, $reg->COSTO, $totalAPagar, $descuentos);
-                   if($pago != 'ver_pagados'){
+                    $bandera=$pago_curso->actualizar_pago($reg->ID_PAGO, $semanasDeRetraso, $totalRetraso, $reg->COSTO, $totalAPagar, $descuentos);
+                    if(!$bandera){
+                        die($conexion->error);
+                    }
+                    if($pago != 'ver_pagados'){
                         $data[]=array(
-                            "0"=>'<span data-var="matricula" class="idpago-'.$reg->ID_PAGO.'">'.$reg->matricula.'</span>',
-                            "1"=>'<span data-var="nombre" class="idpago-'.$reg->ID_PAGO.'">'.$reg->nombre.'</span>',
-                            "2"=>'<span data-var="grupo" class="idpago-'.$reg->ID_PAGO.'">'.$reg->nivel.'</span>',
-                            "3"=>'<span data-var="costo" class="idpago-'.$reg->ID_PAGO.'">'.$reg->COSTO.'</span>',
-                            "4"=>'<span data-var="cargo" class="idpago-'.$reg->ID_PAGO.'">'.$totalRetraso.'</span>',
-                            "5"=>'<span data-var="descuento" class="idpago-'.$reg->ID_PAGO.'">'.$descuentos.'</span>',
-                            "6"=>'<span data-var="monto_pago" class="idpago-'.$reg->ID_PAGO.'">'.$totalAPagar.'</span>',
-                            "7"=>'<span data-var="semanas_retraso" class="idpago-'.$reg->ID_PAGO.'">'.$semanasDeRetraso.'</span>',
-                            "8"=>(!$reg->status)?'<button class="btn btn-danger" onclick="pagar('.$reg->ID_PAGO.')"><i class="fa fa-money"></i>  Pagar</button>':
-                                '<button class="btn btn-success" onclick="ver_recibo('.$reg->ID_PAGO.')"><i class="fa fa-eye"></i> Recibo</button>');   
+                            "0"=>$reg->matricula,
+                            "1"=>$reg->nombre,
+                            "2"=>$reg->nivel,
+                            "3"=>$reg->COSTO,
+                            "4"=>$totalRetraso,
+                            "5"=>$descuentos,
+                            "6"=>$totalAPagar,
+                            "7"=>$semanasDeRetraso,
+                            "8"=>'<button data-id="'.$reg->ID_PAGO.'" class="btn btn-danger btn-block"><i class="fa fa-money"></i>  Pagar</button>');
                     }else{
                         $data[]=array(
-                            "0"=>'<span data-var="matricula" class="idpago-'.$reg->ID_PAGO.'">'.$reg->matricula.'</span>',
-                            "1"=>'<span data-var="nombre" class="idpago-'.$reg->ID_PAGO.'">'.$reg->nombre.'</span>',
-                            "2"=>'<span data-var="grupo" class="idpago-'.$reg->ID_PAGO.'">'.$reg->nivel.'</span>',
-                            "3"=>'<span data-var="costo" class="idpago-'.$reg->ID_PAGO.'">'.$reg->COSTO.'</span>',
-                            "4"=>'<span data-var="cargo" class="idpago-'.$reg->ID_PAGO.'">'.$totalRetraso.'</span>',
-                            "5" => '<span data-var="fecha_pago"  class="idpago-' . $reg->ID_PAGO . '">' . $reg->FECHA_PAGO . '</span>',
-                            "6"=>'<span data-var="descuento" class="idpago-'.$reg->ID_PAGO.'">'.$descuentos.'</span>',
-                            "7"=>'<span data-var="monto_pago" class="idpago-'.$reg->ID_PAGO.'">'.$totalAPagar.'</span>',
-                            "8"=>'<span data-var="semanas_retraso" class="idpago-'.$reg->ID_PAGO.'">'.$semanasDeRetraso.'</span>',
-                            "9"=>(!$reg->status)?'<button class="btn btn-danger" onclick="pagar('.$reg->ID_PAGO.')"><i class="fa fa-money"></i>  Pagar</button>':
-                                '<button class="btn btn-success" onclick="ver_recibo('.$reg->ID_PAGO.')"><i class="fa fa-eye"></i> Recibo</button>');    
+                            "0"=>$reg->matricula,
+                            "1"=>$reg->nombre,
+                            "2"=>$reg->nivel,
+                            "3"=>$reg->COSTO,
+                            "4"=>$totalRetraso,
+                            "5"=>$descuentos,
+                            "6"=>$totalAPagar,
+                            "7"=>$semanasDeRetraso,
+                            "8"=>$reg->FECHA_PAGO,
+                            "9"=>'<form target="_blank" action="../impresiones/tickets/ticketPDF.php" method="POST">
+                                        <input name="idpago" value="'.$reg->ID_PAGO.'" type="hidden" class="idpago">
+                                        <input type="hidden" id="concepto" name="concepto" value="Pago de inscripción" />
+                                        <input type="hidden" id="formato" name="formato" value="pago_inscripcion"/>
+                                        <button type="submit" class="btn btn-success btn-block"><i class="fa fa-eye"></i> Ver recibo</button>
+                                    </form>
+                               ');    
                     }
  		}
  		$results = array(
