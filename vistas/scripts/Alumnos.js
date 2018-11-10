@@ -9,6 +9,7 @@ function init(){
 	mostrarform(false);
 	listar();
 	listarConvenio();
+	listarGrupos();
 	$("#fecha_nacimiento,#fecha_ingreso").datepicker({
 		format:"yyyy-mm-dd"
 	});
@@ -111,6 +112,9 @@ function limpiar()
 	$("#fecha_ingreso").val("");
 	$("#foto").val("");
 	$("#empresa").val("");
+	$("#grupo").val(""); 
+	$(".selectpicker").val('default');
+    $(".selectpicker").selectpicker("refresh");
 	$("#beca").val(0);
 	$("#sede").val("");
 	$("#vistaFoto").attr('src','');
@@ -173,6 +177,74 @@ function listar()
 	    "order": [[ 0, "desc" ]]//Ordenar (columna,orden)
 	}).DataTable();
 }
+
+//Funcion para llenar el select de grupos
+function listarGrupos(idGrupo) {
+	
+    alertify.loading || alertify.dialog('loading', function () {
+        return {
+            main: function (content) {
+                this.setContent(content);
+            },
+            setup: function () {
+                return {
+                    options: {
+                        basic: false,
+                        maximizable: false,
+                        resizable: true,
+                        padding: false,
+                        closable: false,
+                        movable: false,
+                        title: "Cargando contenido"
+                    }
+                };
+            }
+        };
+	});
+	
+    $(document).ajaxStart(function () {
+        
+        alertify.loading('<br><div class="fa-5x text-center">' +
+                '</div>');
+	});
+	
+    $(document).ajaxComplete(function (event, request, settings) {
+        alertify.loading().close();
+	});
+	
+	if(idGrupo === undefined) {
+		$.getJSON("../ajax/Alumnos.php",
+				{"op": "iniciar_grupos"})
+				.done(function (data, textStatus, jqXHR) {
+					try {
+						$.each(data, function (key, grupo) {
+							/* ---AGREGAR LOS DATOS DE GRUPOS--- */
+							$("#grupo").append(
+									'<option value = "' + grupo.id + '" data-content="<span class=\'badge badge-success\'>Grupo: ' + grupo.id + '</span> - Maestro: '
+									+ grupo.nombre_maestro + '  |   Horario: ' + grupo.horario_entrada  + '-' + grupo.horario_salida + '"></option>');
+							$("#grupo").selectpicker('refresh');
+						});
+					} catch (error) {
+						alertify.notify(error.message, 'error', 5, function () {
+						});
+					}
+				})
+				.fail(function (jqXHR, textStatus, errorThrown) {
+					if (console && console.log) {
+						console.log("Algo ha fallado: " + textStatus + " " + jqXHR + " " + errorThrown);
+					}
+				});
+	}
+	else if(idGrupo == null){
+		$('#grupo option[value="0"]').prop('selected', true);
+		$("#grupo").selectpicker('refresh');
+	}
+	else{
+		$('#grupo option[value="'+idGrupo+'"]').prop('selected', true);
+		$("#grupo").selectpicker('refresh');
+	}
+}
+
 //Función para guardar o editar
 
 function guardaryeditar(e)
@@ -217,7 +289,6 @@ function mostrar(idAlumno,nombre)
 	{
 		data = JSON.parse(data);		
 		mostrarform(true);
-
 		$("#id").val(data.id);
 		$("#id").attr("status",data.status);
 		$("#nombre").val(data.nombre);
@@ -239,6 +310,7 @@ function mostrar(idAlumno,nombre)
 		$("#beca").val(data.beca);
 		$("#sede").val(data.sede);
 		listarConvenio(data.empresa);
+		listarGrupos(data.id_grupo);
 
  	})
 }

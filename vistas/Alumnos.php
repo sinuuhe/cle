@@ -112,9 +112,16 @@ require 'header.php';
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Empresa:</label>
                             <select class="form-control" name="empresa" id="empresa"></select>
-                          </div><div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                          </div>
+                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Beca:</label>
                             <input type="text" class="form-control" name="beca" id="beca" maxlength="50" placeholder="Beca" required>
+                          </div>
+                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Registrar en grupo:</label>
+                            <select class="form-control" name="grupo" id="grupo" data-style="btn btn-primary btn-round" data-live-search="true" class="selectpicker">
+                            <option value="0" data-content="<span class=\'badge badge-success\'>No asignar grupo.</span>" selected></option>
+                            </select>
                           </div>
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>

@@ -28,6 +28,36 @@ Class Alumno
 		return ejecutarConsulta($sql);
 	}
 
+	public function inscribirAlumno($id_grupo, $id_alumno)
+	{
+		//Checar si existe en tabla alumnos_grupos_activos para actualizar o insertar.
+		$sql = "SELECT * FROM alumnos_grupos_activos WHERE ID_ALUMNO = '$id_alumno'";
+		$existe_en_grupos = ejecutarConsultaSimpleFila($sql);
+
+		if(!$existe_en_grupos)
+		{
+			$sql = "INSERT INTO alumnos_grupos_activos (id, ID_GRUPO, ID_ALUMNO, CALIFICACION, STATUS)
+				VALUES ( null,'$id_grupo', '$id_alumno', 0, 'Normal')";
+		}
+		else
+		{
+			$sql = "UPDATE alumnos_grupos_activos 
+					SET ID_GRUPO = '$id_grupo', CALIFICACION = 0, STATUS = 'Normal'
+					WHERE ID_ALUMNO = '$id_alumno'";
+		}
+
+		return ejecutarConsulta($sql);
+	}
+
+	public function dejarGrupos($id_alumno)
+	{
+		// Borrar la relacion
+		$sql = "DELETE FROM alumnos_grupos_activos 
+				WHERE ID_ALUMNO = '$id_alumno'";
+		
+		return ejecutarConsulta($sql);
+	}
+
 	//Implementamos un método para editar registros
 	public function editar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$status,$empresa,$beca,$password,$sede)
 	{
@@ -65,7 +95,7 @@ Class Alumno
 	//Implementar un método para mostrar los datos de un registro a modificar
 	public function mostrar($id)
 	{
-		$sql="SELECT * FROM alumnos WHERE id='$id'";
+		$sql= "SELECT  a.*, aga.ID_GRUPO AS id_grupo FROM alumnos a LEFT JOIN alumnos_grupos_activos aga ON a.id = aga.ID_ALUMNO WHERE a.id='$id'";
 		return ejecutarConsultaSimpleFila($sql);
 	}
 
@@ -75,6 +105,22 @@ Class Alumno
 		$sql="SELECT * FROM alumnos";
 		return ejecutarConsulta($sql);		
 	}
+
+	public function listarGrupos()
+	{
+		//Obtener grupos activos con nombres de maesto
+		$sql = "SELECT 
+			ga.ID_GRUPO, 
+			CONCAT(m.nombre,' ',m.apellidoP,' ',m.apellidoM) AS nombre_maestro,
+			ga.HORARIO_ENTRADA, 
+			ga.HORARIO_SALIDA 
+			FROM grupos_activos ga 
+			INNER JOIN maestros m 
+				on ga.ID_MAESTRO = m.id;";
+
+		return ejecutarConsulta($sql);
+	}
+
 	//Implementar un método para listar los registros y mostrar en el select
 	public function select()
 	{

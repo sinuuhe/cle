@@ -19,11 +19,33 @@ $fecha_ingreso = isset($_POST["fecha_ingreso"])? limpiarCadena($_POST["fecha_ing
 $foto = isset($_POST["foto"])? limpiarCadena($_POST["foto"]):"";
 $empresa = isset($_POST["empresa"])? limpiarCadena($_POST["empresa"]):"";
 $beca = isset($_POST["beca"])? limpiarCadena($_POST["beca"]):"";
+$grupo = isset($_POST["grupo"])? limpiarCadena($_POST["grupo"]):"";
 //sede sera tomada de la sesion
 $sede = 1;
 $status = isset($_POST["status"])? limpiarCadena($_POST["status"]):"";
 
 switch ($_GET["op"]){
+		
+	case 'iniciar_grupos':
+		$dataGrupos = [];
+		$rspta = $alumno->listarGrupos();
+
+		if ($rspta) {
+			while ($r = $rspta->fetch_object()) {
+				$dataGrupos[] = array(
+					'id' => $r->ID_GRUPO,
+					'nombre_maestro' => $r->nombre_maestro,
+					'horario_entrada' => $r->HORARIO_ENTRADA,
+					'horario_salida' => $r->HORARIO_SALIDA,
+				);
+			}
+		} else {
+            echo "Error al listar Grupos: " . $conexion->error;
+            exit();
+		}
+	echo json_encode($dataGrupos);
+	break;
+
 	case 'guardaryeditar':
 		if (empty($id)){
 			//get the new Id
@@ -33,6 +55,12 @@ switch ($_GET["op"]){
 			$foto = $nuevoIdAlumno. '.' . end($ext);
 			$ruta = "/files/fotosAlumnos/".$foto;
 			$rspta=$alumno->insertar($nuevoIdAlumno,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$ruta,$empresa,$beca,$password,$sede);
+			
+			if($grupo != "0")
+			{
+				$rspta2 = $alumno->inscribirAlumno($grupo, $nuevoIdAlumno);
+			}
+			
 			echo $rspta ? "Alumno registrado correctamente." : "No se pudo registrar el alumno. Intente de nuevo por favor.";
 
 
@@ -48,6 +76,8 @@ switch ($_GET["op"]){
 			$ext = explode(".", $_FILES["foto"]["name"]);
 			$foto = $id. '.' . end($ext);
 			$ruta = "/files/fotosAlumnos/".$foto;
+			// La agregue porque en editar ya no estaba la pasword
+			$password = strtoupper($nombre).strtoupper($apellidoP);
 
 			if ($_FILES['foto']['type'] == "image/jpg" || $_FILES['foto']['type'] == "image/jpeg" || $_FILES['foto']['type'] == "image/png")
 			{
@@ -57,7 +87,11 @@ switch ($_GET["op"]){
 
 
 			$rspta=$alumno->editar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$status,$empresa,$beca,$password,$sede);
-			echo $rspta ? "Alumno actualizado correctamente." : "No se pudo actuailzar el alumno. Intente de nuevo por favor.";
+			
+			// Checar si el grupo que se manda es el "no asignar grupo"
+			$rspta2 = $grupo=="0" ? $alumno->dejarGrupos($id) : $alumno->inscribirAlumno($grupo, $id) ;
+
+			echo $rspta ? "Alumno actualizado correctamente." : "No se pudo actualizar el alumno. Intente de nuevo por favor.";
 		}
 	break;
 
