@@ -312,6 +312,20 @@ desired effect
             <li><a href="pago_libro.php">Pago de libro</a></li>
           </ul>
         </li>
+        <li class="treeview">
+          <a href="#"><i class="fa fa-link"></i> <span>Mis Grupos</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+              </span>
+          </a>
+          <!-- Aqui van a los grupos por usuario y se le va a mandar el id de grupo -->
+          <ul class="treeview-menu">
+            <li><a href="asistencia.php?grupoId=G1">Grupo G1</a></li>
+            <li><a href="asistencia.php?grupoId=G2">Grupo G2</a></li>
+            <li><a href="asistencia.php?grupoId=G3">Grupo G3</a></li>
+            <li><a href="personal.php">Subir Calificaciones</a></li>
+          </ul>
+        </li>
       </ul>
       <!-- /.sidebar-menu -->
     </section>

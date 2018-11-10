@@ -66,7 +66,7 @@ Class Grupo
 	//Implementar un método para mostrar los datos de un registro a modificar
 	public function mostrar($id)
 	{
-		$sql="SELECT * FROM grupos_activos WHERE id='$id'";
+		$sql="SELECT * FROM grupos_activos WHERE ID_GRUPO='$id'";
 		return ejecutarConsultaSimpleFila($sql);
 	}
 

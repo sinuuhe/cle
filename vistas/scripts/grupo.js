@@ -10,7 +10,7 @@ function init() {
     listarGrupos();
     listarNiveles();
     listarMaestros();
-    togglePanel();
+    
     $("#fecha_inicio,#fecha_fin").datepicker({
 		format:"yyyy-mm-dd"
     });
@@ -240,6 +240,30 @@ function guardaryeditar(e)
 	});
 	limpiar();
 }
+function mostrar(idGrupo)
+{
+	$.post("../ajax/grupo.php?op=mostrar",{id : idGrupo}, function(data, status)
+	{
+		data = JSON.parse(data);		
+		mostrarform(true);
+
+		$("#id").val(data.id);
+		
+		$("#nombre").val(data.nombre);
+		$("#nivel").val(data.nivel);
+		$("#idMaestro").val(data.idMaestro);
+		$("#numDias").val(data.numDias);
+		$("#dias").val(data.dias);
+		$("#horario_entrada").val(data.horario_entrada);
+		$("#horario_salida").val(data.horario_salida);
+		$("#fecha_inicio").val(data.fecha_inicio);
+		$("#fecha_fin").val(data.fecha_fin);
+		$("#salon").val(data.salon);
+		$("#observaciones").val(data.observaciones);
+
+ 	})
+}
+
 function cancelarform()
 {
 	limpiar();

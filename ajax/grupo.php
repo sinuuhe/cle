@@ -2,7 +2,8 @@
 require_once "../modelos/grupo.php";
 
 $grupo=new Grupo();
- 
+
+$id  = isset($_POST["id"])? limpiarCadena($_POST["id"]):"" ;
 $idNivel  = isset($_POST["nivel"])? limpiarCadena($_POST["nivel"]):"" ;
 $idMaestro  = isset($_POST["idMaestro"])? limpiarCadena($_POST["idMaestro"]):"";
 $numDias  = isset($_POST["numDias"])? limpiarCadena($_POST["numDias"]):"";
@@ -113,7 +114,7 @@ switch ($_GET["op"]){
 	break;
 
 	case 'mostrar':
-		$rspta=$maestro->mostrar($id);
+		$rspta=$grupo->mostrar($id);
  		//Codificar el resultado utilizando json
  		echo json_encode($rspta);
 	break;
@@ -125,11 +126,12 @@ switch ($_GET["op"]){
 
  		while ($reg=$rspta->fetch_object()){
  			$data[]=array(
- 				"0"=>$reg->ID_GRUPO,
- 				"1"=>$reg->nombre,
-                "2"=>$reg->DIAS,
-                "3"=>$reg->HORARIO_ENTRADA,
-                "4"=>$reg->HORARIO_SALIDA
+				"0"=>'<button class="btn btn-warning" onclick="mostrar(\''.$reg->ID_GRUPO.'\')"><i class=""></i>Editar</button>',
+ 				"1"=>$reg->ID_GRUPO,
+ 				"2"=>$reg->nombre,
+                "3"=>$reg->DIAS,
+                "4"=>$reg->HORARIO_ENTRADA,
+                "5"=>$reg->HORARIO_SALIDA
  				);
  		}
  		$results = array(
