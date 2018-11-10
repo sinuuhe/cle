@@ -19,7 +19,8 @@ $fecha_ingreso = isset($_POST["fecha_ingreso"])? limpiarCadena($_POST["fecha_ing
 $foto = isset($_POST["foto"])? limpiarCadena($_POST["foto"]):"";
 $empresa = isset($_POST["empresa"])? limpiarCadena($_POST["empresa"]):"";
 $beca = isset($_POST["beca"])? limpiarCadena($_POST["beca"]):"";
-$sede = isset($_POST["sede"])? limpiarCadena($_POST["sede"]):"";
+//sede sera tomada de la sesion
+$sede = 1;
 $status = isset($_POST["status"])? limpiarCadena($_POST["status"]):"";
 
 switch ($_GET["op"]){

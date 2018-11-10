@@ -46,11 +46,15 @@ if ($_SESSION['permiso']==1){
                     </div>
                     <div class="panel-body" id="formularioregistros">
                         <form name="formulario" id="formulario" method="POST">
+                          <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <img src="" alt="" id = "vistaFoto" name = "vistaFoto"  class = "rounded">
+                          </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Nombre:</label>
                             <input type="hidden" name="id" id="id">
                             <input type="text" class="form-control" name="nombre" id="nombre" maxlength="50" placeholder="Nombre" required>
                           </div>
+
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Apellido Paterno:</label>
                             <input type="text" class="form-control" name="apellidoP" id="apellidoP" maxlength="50" placeholder="Apellido Materno" required>
@@ -105,9 +109,6 @@ if ($_SESSION['permiso']==1){
                           </div><div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Beca:</label>
                             <input type="text" class="form-control" name="beca" id="beca" maxlength="50" placeholder="Beca" required>
-                          </div><div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Sede:</label>
-                            <input type="text" class="form-control" name="sede" id="sede" maxlength="50" placeholder="Sede" required>
                           </div>
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
