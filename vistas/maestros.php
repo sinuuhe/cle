@@ -1,20 +1,14 @@
 <?php
 //Activamos el almacenamiento en el buffer
-//ob_start();
-//session_start();
-
-//if (!isset($_SESSION["nombre"]))
-//{
-//  header("Location: login.html");
-//}
-//else
-//{
+ob_start();
+session_start();
+if (!isset($_SESSION["nombre"])) {
+    header("Location: login.php");
+    exit();
+}
 require 'header.php';
-
-//if ($_SESSION['almacen']==1)
-//{
-//
-?>
+if ($_SESSION['permiso'] == 1 || $_SESSION['permiso'] == 4) {
+    ?>
 <!--Contenido-->
       <!-- Content Wrapper. Contains page content -->
       <div class="content-wrapper">        
@@ -95,6 +89,17 @@ require 'header.php';
                             <label>Foto:</label>
                             <input type="file" class="form-control" data-rutaFoto = "" name="foto" id="foto" maxlength="50" placeholder="Foto">
                           </div>
+                          
+                          <div id = "idDiv"class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Id:</label>
+                            <input disabled type="text" class="form-control"   id="id_usuario" maxlength="50">
+                          </div>
+                          
+                          <div id = "passDiv"class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Contraseña:</label>
+                            <input disabled type="text" class="form-control"   id="pass" maxlength="50">
+                          </div>
+                          
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
 
@@ -111,18 +116,14 @@ require 'header.php';
     </div><!-- /.content-wrapper -->
   <!--Fin-Contenido-->
 <?php
-//}
-//else
-//{
-  //require 'noacceso.php';
-//}
+} else {
+    require 'noacceso.php';
+}
 
 require 'footer.php';
 ?>
 <script type="text/javascript" src="scripts/maestro.js"></script>
-<?php 
-//}
-//ob_end_flush();
-?>
 
+<?php
+ob_end_flush();
 

@@ -9,7 +9,7 @@ function init(){
 	mostrarform(false);
 	listar();
 	listarConvenio();
-	listarGrupos();
+	//listarGrupos();
 	$("#fecha_nacimiento,#fecha_ingreso").datepicker({
 		format:"yyyy-mm-dd"
 	});
@@ -96,6 +96,7 @@ function elegirBeca(){
 function limpiar()
 {
 	$("#id").val("");
+	$("#idTitle").text("");
 	$("#nombre").val("");
 	$("#descripcion").val("");
 	$("#nombre").val("");
@@ -287,9 +288,14 @@ function mostrar(idAlumno,nombre)
 {
 	$.post("../ajax/Alumnos.php?op=mostrar",{id : idAlumno}, function(data, status)
 	{
-		data = JSON.parse(data);		
+		data = JSON.parse(data);
+		
+		$('#pass').attr('disabled','false');
+		$('#id_usuario').attr('disabled','true');
+		
 		mostrarform(true);
 		$("#id").val(data.id);
+		$("#idTitle").text("Matrícula: " + data.id);
 		$("#id").attr("status",data.status);
 		$("#nombre").val(data.nombre);
 		$("#descripcion").val(data.descripcion);
@@ -309,8 +315,13 @@ function mostrar(idAlumno,nombre)
 		$("#vistaFoto").attr('src','..' + data.foto);
 		$("#beca").val(data.beca);
 		$("#sede").val(data.sede);
+		$("#id_usuario").val(data.id);
+		$("#pass").val(data.password);
 		listarConvenio(data.empresa);
 		listarGrupos(data.id_grupo);
+		
+		$('#pass').attr('disabled','true');
+        $('#id_usuario').attr('disabled','true');
 
  	})
 }

@@ -1,10 +1,13 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Activamos el almacenamiento en el buffer
+ob_start();
+session_start();
+if (!isset($_SESSION["nombre"])){
+    header("Location: login.php");
+    exit();
+}
 require 'header.php';
+if ($_SESSION['permiso']==1 || $_SESSION['permiso'] == 4){
 ?>
 <!--Contenido-->
 <!-- Content Wrapper. Contains page content -->
@@ -20,16 +23,20 @@ require 'header.php';
                             <ul class="nav nav-pills ">
                                 <li role="presentation" class="active">
                                     <a data-toggle="tab" href="#pagar_libros">
-                                    Vender Libros
+                                    Vender
                                     </a>
                                 </li>
-                                <li role="presentation"><a data-toggle="tab"  href="#tabla_libros">Libros Pagados</a></li>
+                                <li role="presentation">
+                                    <a data-toggle="tab"  href="#tabla_libros">
+                                       Pagos
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>
                     <!-- /.box-header -->
                     <!-- centro -->
-                    <div class="panel-body  tab-content" >
+                    <div id="cont-libro" class="panel-body  tab-content" >
                         <form class="form-horizontal tab-pane fade in active" id="pagar_libros">
                             <div class="form-group">
                                 <label for="libro" class="col-sm-2 control-label">Libro</label>
@@ -105,8 +112,17 @@ require 'header.php';
 </div><!-- /.content-wrapper -->
 <!--Fin-Contenido-->
 <?php
+}
+else{
+  require 'noacceso.php';
+}
+require 'dialogos.php';
+    get_dialogs("libros");
 require 'footer.php';
 ?>
 <script type="text/javascript" src="scripts/pago_libro.js"></script>
+
+<?php 
+ob_end_flush();
 
 

@@ -22,6 +22,7 @@ Class Convenio
 	public function editar($id,$nombre,$desMensualidad,$desInscripcion)
 	{
 		$sql="UPDATE convenios SET NOMBRE = '$nombre',DES_MENSUALIDAD = $desMensualidad, DES_INSCRIPCION = $desInscripcion WHERE id=$id";
+		
 		return ejecutarConsulta($sql);
 	}
 

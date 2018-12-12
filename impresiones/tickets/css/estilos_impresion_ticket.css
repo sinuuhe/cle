@@ -1,13 +1,10 @@
 .tamano{
 	width: 25%;
+	margin-left: -10px;
 }
 
 .sinEspacio{
 	margin-top: -20px;
-}
-
-img{
-    filter: grayscale(100%);
 }
 
 .sinEspacioParrafo{
@@ -22,4 +19,28 @@ img{
 
 .abajo{
 	margin-top: 70px;
+}
+
+.img-5x{
+	width: 20%;
+	height: auto;
+}
+
+.parrafo-linea{
+	background-color: blue;
+	color: white;
+	margin-bottom: -10px;
+}
+
+.mitad{
+	width: 48%;
+	float: left;
+}
+
+table{
+	border-bottom: 1px solid black;
+}
+
+.top-5x{
+	margin-top: -35px;
 }

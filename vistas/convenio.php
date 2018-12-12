@@ -1,18 +1,18 @@
 <?php
 //Activamos el almacenamiento en el buffer
-//ob_start();
-//session_start();
+ob_start();
+session_start();
 
-//if (!isset($_SESSION["nombre"]))
-//{
-//  header("Location: login.html");
-//}
-//else
-//{
+if (!isset($_SESSION["nombre"]))
+{
+  header("Location: login.html");
+}
+else
+{
 require 'header.php';
 
-//if ($_SESSION['almacen']==1)
-//{
+if ($_SESSION['permiso']==1)
+{
 //
 ?>
 <!--Contenido-->
@@ -79,18 +79,18 @@ require 'header.php';
     </div><!-- /.content-wrapper -->
   <!--Fin-Contenido-->
 <?php
-//}
-//else
-//{
-  //require 'noacceso.php';
-//}
+}
+else
+{
+  require 'noacceso.php';
+}
 
 require 'footer.php';
 ?>
 <script type="text/javascript" src="scripts/Convenios.js"></script>
 <?php 
-//}
-//ob_end_flush();
+}
+ob_end_flush();
 ?>
 
 

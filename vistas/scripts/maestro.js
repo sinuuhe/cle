@@ -181,9 +181,13 @@ function mostrar(idAlumno,nombre)
 {
 	$.post("../ajax/maestro.php?op=mostrar",{id : idAlumno}, function(data, status)
 	{
-		data = JSON.parse(data);		
-		mostrarform(true);
+		data = JSON.parse(data);
+		
+		$('#pass').attr('disabled','false');
+		$('#id_usuario').attr('disabled','true');
 
+		mostrarform(true);
+        
 		$("#id").val(data.id);
 		$("#id").attr("status",data.status);
 		$("#nombre").val(data.nombre);
@@ -196,9 +200,14 @@ function mostrar(idAlumno,nombre)
 		$("#email").val(data.email);
 		$("#fecha_nacimiento").val(data.fecha_nacimiento);
 		$("#fecha_ingreso").val(data.fecha_ingreso);
-		$("#foto").attr("data-rutaFoto",data.foto)
+		$("#foto").attr("data-rutaFoto",data.foto);
+		$("#id_usuario").val(data.id);
+		$("#pass").val(data.password);
 		$("#vistaFoto").attr('src','..' + data.foto);
-
+		
+		
+        $('#pass').attr('disabled','true');
+        $('#id_usuario').attr('disabled','true');
  	})
 }
 

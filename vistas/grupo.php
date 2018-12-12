@@ -1,18 +1,19 @@
 <?php
 //Activamos el almacenamiento en el buffer
-//ob_start();
-//session_start();
+ob_start();
+session_start();
 
-//if (!isset($_SESSION["nombre"]))
-//{
-//  header("Location: login.html");
-//}
-//else
-//{
+if (!isset($_SESSION["nombre"]))
+{
+  header("Location: login.php");
+  exit();
+}
+else
+{
 require 'header.php';
 
-//if ($_SESSION['almacen']==1)
-//{
+if ($_SESSION['permiso']==1 || $_SESSION['permiso']==4)
+{
 //
 ?>
 <!--Contenido-->
@@ -51,6 +52,34 @@ require 'header.php';
                             <th>H. Salida</th>
                           </tfoot>
                         </table>
+                        </div>
+                        <div class="panel-body table-responsive" id="listadoAlumnos">
+                        <table id="tbllistadoAlumnos" class="table table-striped table-bordered table-condensed table-hover">
+                          <thead>
+                            <th>Nombre</th>
+                            <th>Opciones</th>
+                          </thead>
+                          <tbody>                            
+                          </tbody>
+                          <tfoot> 
+                          <th>Nombre</th>
+                          <th>Opciones</th>
+                          </tfoot>
+                        </table>
+                        <button class="btn btn-danger" onclick="cancelarAlumnos()" type="button"><i class="fa fa-arrow-circle-left"></i>Volver</button>
+                        <h3>Agregar alumnos al grupo</h3>
+                        <div class="form-group">
+                                <label for="alumno" class="col-sm-2 control-label">Alumno</label>
+                                <div class="col-sm-10">
+                                    <div class="input-group">
+                                        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                                        <select onchange = 'agregarAlumno()' required name="alumno" title="Selecciona un alumno..."  data-style="btn btn-primary btn-round" id="alumno" data-live-search="true" class="selectpicker ">
+
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        
                     </div>
                     <div class="panel-body" id="formularioregistros">
                         <form name="formulario" id="formulario" method="POST">
@@ -73,11 +102,12 @@ require 'header.php';
 
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Días de la semana:</label>
+                            <input type="hidden" name="id" id="id">
                             <input type="text" class="form-control" name="dias" id="dias" maxlength="50" placeholder="Días de la semana" required>
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Horario entrada:</label>
-                            <input type="time" class="form-control" name="horario_entrada" id="horario_entrada" maxlength="50" placeholder="Horario entrada" required>
+                            <input type="time"   class="form-control" name="horario_entrada" id="horario_entrada" required>
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Horario salida:</label>
@@ -115,18 +145,18 @@ require 'header.php';
     </div><!-- /.content-wrapper -->
   <!--Fin-Contenido-->
 <?php
-//}
-//else
-//{
-  //require 'noacceso.php';
-//}
+}
+else
+{
+  require 'noacceso.php';
+}
 
 require 'footer.php';
 ?>
 <script type="text/javascript" src="scripts/grupo.js"></script>
 <?php 
-//}
-//ob_end_flush();
+}
+ob_end_flush();
 ?>
 
 

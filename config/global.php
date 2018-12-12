@@ -4,7 +4,7 @@
 define("DB_HOST","localhost");
 
 //Nombre de la base de datos
-define("DB_NAME", "cledb");
+define("DB_NAME", "plataforma");
 
 //Usuario de la base de datos
 define("DB_USERNAME", "root");

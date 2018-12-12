@@ -131,7 +131,7 @@ function mostrar(idLibro)
 		data = JSON.parse(data);		
 		mostrarform(true);
 
-		$("#id").val(data.id);
+		$("#id").val(data.ID);
 		$("#nombre").val(data.NOMBRE);
 		$("#des_mensualidad").val(data.DES_MENSUALIDAD);
 		$("#des_inscripcion").val(data.DES_INSCRIPCION);

@@ -58,7 +58,8 @@ switch ($_GET["op"]){
 			
 			if($grupo != "0")
 			{
-				$rspta2 = $alumno->inscribirAlumno($grupo, $nuevoIdAlumno);
+				//$rspta2 = $alumno->inscribirAlumno($grupo, $nuevoIdAlumno);
+				
 			}
 			
 			echo $rspta ? "Alumno registrado correctamente." : "No se pudo registrar el alumno. Intente de nuevo por favor.";
@@ -71,6 +72,39 @@ switch ($_GET["op"]){
 				
 				move_uploaded_file($_FILES["foto"]["tmp_name"], "../files/fotosAlumnos/" . $foto);
 			}
+                        $monto_pago=0;
+                $sql ="SELECT INSCRIPCION  FROM niveles WHERE ID=8";
+                if($result = $conexion -> query($sql)){
+                   if($row = $result->fetch_array(MYSQLI_ASSOC)){
+                   $monto_pago=$row["INSCRIPCION"];
+                   }
+                }else{
+                   echo " Error MONTO PAGO GET: " . $conexion->error;
+                   exit();
+                }
+                $result->free();
+                
+                $descuento=0;
+                $sql ="SELECT c.DES_INSCRIPCION FROM alumnos a INNER JOIN convenios c on a.empresa=c.ID WHERE a.id='$nuevoIdAlumno'";
+                if($result = $conexion -> query($sql)){
+                   if($row = $result->fetch_array(MYSQLI_ASSOC)){
+                   $descuento=$row["DES_INSCRIPCION"];
+                   }
+                }else{
+                   echo " Error DESCUENTO GET: " . $conexion->error;
+                   exit();
+                }
+                $result->free();
+                
+                $total_pago=((100-$descuento)*0.01)*($monto_pago);
+                
+                $sql ="INSERT INTO pago_inscripciones VALUES(0,8,'$nuevoIdAlumno',null,$monto_pago,$descuento,$total_pago,0,'')";
+                
+                if ($conexion->query($sql) === TRUE) {
+                   echo "EXITO";
+                } else {
+                   echo "Error updating record: " . $conexion->error;
+                }
 		}
 		else {
 			$ext = explode(".", $_FILES["foto"]["name"]);
@@ -85,7 +119,7 @@ switch ($_GET["op"]){
 				move_uploaded_file($_FILES["foto"]["tmp_name"], "../files/fotosAlumnos/" . $foto);
 			}
 
-
+			
 			$rspta=$alumno->editar($id,$nombre,$apellidoP,$apellidoM,$calle,$colonia,$numero,$municipio,$telefono,$celular,$email,$fecha_nacimiento,$fecha_ingreso,$foto,$status,$empresa,$beca,$password,$sede);
 			
 			// Checar si el grupo que se manda es el "no asignar grupo"
@@ -130,7 +164,7 @@ switch ($_GET["op"]){
  			$data[]=array(
  				"0"=>(!$reg->status)?'<button class="btn btn-success" onclick="alta(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Alta</button>':
 					 '<button class="btn btn-danger" onclick="baja(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i> Baja</button>
-					 <button class="btn btn-warning" onclick="mostrar(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Editar</button>',
+					 <button class="btn btn-warning" onclick="mostrar(\''.$reg->id.'\',\''.$reg->nombre.' '.$reg->apellidoP.' '.$reg->apellidoM.'\')"><i class=""></i>Mostrar</button>',
  				"1"=>$reg->nombre,
  				"2"=>$reg->apellidoP,
                 "3"=>$reg->apellidoM,

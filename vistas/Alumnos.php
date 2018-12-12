@@ -25,8 +25,8 @@ require 'header.php';
                   <div class="box">
                     <div class="box-header with-border">
                           <h1 class="box-title">Alumnos <button class="btn btn-success" id="btnagregar" onclick="mostrarform(true)"><i class="fa fa-plus-circle"></i> Agregar</button></h1>
-                        <div class="box-tools pull-right">
-                        </div>
+                          <!--
+                        <div class="box-tools pull-right"></div> -->
                     </div>
                     <!-- /.box-header -->
                     <!-- centro -->
@@ -54,6 +54,9 @@ require 'header.php';
                         <form name="formulario" id="formulario" method="POST">
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <img src="" alt="" id = "vistaFoto" name = "vistaFoto"  class = "rounded">
+                          </div>
+                          <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                              <h3 id = idTitle></h3>
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Nombre:</label>
@@ -87,11 +90,11 @@ require 'header.php';
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Teléfono:</label>
-                            <input type="text" class="form-control" name="telefono" id="telefono" maxlength="50" placeholder="Teléfono" required>
+                            <input type="text" class="form-control" name="telefono" id="telefono" placeholder="Teléfono" pattern = "[0-9]{0,12}" >
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Celular:</label>
-                            <input type="text" class="form-control" name="celular" id="celular" maxlength="50" placeholder="Celular" required>
+                            <input type="text" class="form-control" name="celular" id="celular" maxlength="50" placeholder="Celular" pattern = "[0-9]{0,12}" required>
                           </div>
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Correo electrónico:</label>
@@ -116,13 +119,17 @@ require 'header.php';
                           <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <label>Beca:</label>
                             <input type="text" class="form-control" name="beca" id="beca" maxlength="50" placeholder="Beca" required>
+                          </div>       
+                          <div id = "idDiv"class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Id:</label>
+                            <input disabled type="text" class="form-control"   id="id_usuario" maxlength="50">
                           </div>
-                          <div class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                            <label>Registrar en grupo:</label>
-                            <select class="form-control" name="grupo" id="grupo" data-style="btn btn-primary btn-round" data-live-search="true" class="selectpicker">
-                            <option value="0" data-content="<span class=\'badge badge-success\'>No asignar grupo.</span>" selected></option>
-                            </select>
+                          
+                          <div id = "passDiv"class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Contraseña:</label>
+                            <input disabled type="text" class="form-control"   id="pass" maxlength="50">
                           </div>
+                          
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
 

@@ -3,6 +3,9 @@ require_once "../modelos/maestro.php";
 
 $maestro=new Maestro();
 
+ob_start();
+session_start();
+
 $id=isset($_POST["id"])? limpiarCadena($_POST["id"]):"";
 $nombre=isset($_POST["nombre"])? limpiarCadena($_POST["nombre"]):"";
 $apellidoP=isset($_POST["apellidoP"])? limpiarCadena($_POST["apellidoP"]):"";
@@ -18,6 +21,21 @@ $status = isset($_POST["status"])? limpiarCadena($_POST["status"]):"";
 $password = isset($_POST["password"])? limpiarCadena($_POST["password"]):"";
 
 switch ($_GET["op"]){
+	case 'guardaryeditarperfil':
+	$ext = explode(".", $_FILES["foto"]["name"]);
+			$foto = $id. '.' . end($ext);
+			$ruta = "/files/fotosMaestros/".$foto;
+
+			if ($_FILES['foto']['type'] == "image/jpg" || $_FILES['foto']['type'] == "image/jpeg" || $_FILES['foto']['type'] == "image/png")
+			{
+				
+				move_uploaded_file($_FILES["foto"]["tmp_name"], "../files/fotosMaestros/" . $foto);
+			}
+
+
+			$rspta=$maestro->editarPerfil($id,$password);
+			echo $rspta ? "Maestro actualizado correctamente.": "No se pudo actuailzar el maestro. Intente de nuevo por favor.";
+	break;
 	case 'guardaryeditar':
 		if (empty($id)){
 			//get the new Id
@@ -78,6 +96,12 @@ switch ($_GET["op"]){
 	case 'mostrar':
 		$rspta=$maestro->mostrar($id);
  		//Codificar el resultado utilizando json
+ 		echo json_encode($rspta);
+	break;
+	case 'mostrar_perfil':
+		$idSesion = $_SESSION["id"];
+		$rspta=$maestro->mostrar($idSesion);
+		 //Codificar el resultado utilizando json
  		echo json_encode($rspta);
 	break;
 

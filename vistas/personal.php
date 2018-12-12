@@ -99,6 +99,19 @@ require 'header.php';
                             <label>Puesto:</label>
                             <input data-provider = "datepicker" type="text" class="form-control" name="puesto" id="puesto" maxlength="50" placeholder="Puesto" required>
                           </div>
+                          
+                           
+                          <div id = "idDiv"class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Id:</label>
+                            <input disabled type="text" class="form-control"   id="id_usuario" maxlength="50">
+                          </div>
+                          
+                          <div id = "passDiv"class="form-group col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <label>Contraseña:</label>
+                            <input disabled type="text" class="form-control"   id="pass" maxlength="50">
+                          </div>
+                          
+                          
                           <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <button class="btn btn-primary" type="submit" id="btnGuardar"><i class="fa fa-save"></i> Guardar</button>
 

@@ -14,7 +14,7 @@
       Anything you want
     </div>
     <!-- Default to the left -->
-    <strong>Copyright &copy; 2016 <a href="#">Company</a>.</strong> All rights reserved.
+    <strong>Copyright &copy; 2017-<?php echo date("Y");?> -  <a href="#">CLEMORELIA</a>.</strong> Todos los derechos reservados.
   </footer>
 
   <!-- Control Sidebar -->
@@ -102,27 +102,29 @@
 <!-- Alertify -->
 <script src="../public/bower_components/alertify/js/alertify.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
-<script src="../public/bower_components/bootstrap/js/bootstrap.js"></script>
+<script src="../public/bower_components/bootstrap/js/bootstrap.min.js"></script>
 <!-- AdminLTE App -->
 <script src="../public/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
+<script src="../public/dist/js/confirm.js"></script>
 <script src="../public/dist/js/demo.js"></script>
 <!--DATATABLES -->
-<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>    
-<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/colreorder/1.5.1/js/dataTables.colReorder.min.js"></script>
+<script src="../public/bower_components/datatables/js/jquery.dataTables.min.js"></script>    
+<script src="../public/bower_components/datatables/js/dataTables.bootstrap.min.js"></script>
+<script src="../public/bower_components/datatables/js/dataTables.buttons.min.js"></script>
+<script src="../public/bower_components/datatables/js/buttons.bootstrap.min.js"></script>
+<script src="../public/bower_components/jszip/js/jszip.min.js"></script>
+<script src="../public/bower_components/pdfmake/js/pdfmake.min.js"></script>
+<script src="../public/bower_components/pdfmake/js/vfs_fonts.js"></script>
+<script src="../public/bower_components/datatables/js/buttons.html5.min.js"></script>
+<script src="../public/bower_components/datatables/js/buttons.print.min.js"></script>
+<script src="../public/bower_components/datatables/js/buttons.colVis.min.js"></script>
+<script src="../public/bower_components/datatables/js/dataTables.responsive.min.js"></script>
+<script src="../public/bower_components/datatables/js/dataTables.colReorder.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.3/js/responsive.bootstrap.min.js"></script>
 <script src="../public/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
 <script src="../public/bower_components/bootstrap-datepicker/js/bootstrap-datepicker.es.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script src="../public/bower_components/moment/js/moment.min.js"></script>
 <script src="../public/bower_components/bootstrap-select/js/bootstrap-select.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>    
  </body>

@@ -28,25 +28,37 @@ Class Alumno
 		return ejecutarConsulta($sql);
 	}
 
+	public function obtenerIdNivel($idGrupo){
+		$sql = "SELECT ID_NIVEL as id_nivel FROM grupos_activos WHERE ID_GRUPO = '$idGrupo'";
+		$idNivel = ejecutarConsultaSimpleFila($sql);
+		return $idNivel -> id_nivel;
+	}
+
 	public function inscribirAlumno($id_grupo, $id_alumno)
 	{
 		//Checar si existe en tabla alumnos_grupos_activos para actualizar o insertar.
-		$sql = "SELECT * FROM alumnos_grupos_activos WHERE ID_ALUMNO = '$id_alumno'";
-		$existe_en_grupos = ejecutarConsultaSimpleFila($sql);
+		//$sql = "SELECT * FROM alumnos_grupos_activos WHERE ID_ALUMNO = '$id_alumno'";
+		//$existe_en_grupos = ejecutarConsultaSimpleFila($sql);
+//
+		//if(!$existe_en_grupos)
+		//{
+		//	$sql = "INSERT INTO alumnos_grupos_activos (id, ID_GRUPO, ID_ALUMNO, CALIFICACION, STATUS)
+		//		VALUES ( null,'$id_grupo', '$id_alumno', 0, 'Normal')";
+//
+			//$nivelId = self::obtenerIdNivel($id_grupo);
+		
+		//	$sqlPagos = "INSERT INTO pago_cursos VALUES (NULL, '$id_alumno', '$id_grupo', $nivelId,0,0,0,0,'','',0);";
+		//	echo $sqlPagos;
+		//	ejecutarConsulta($sqlPagos);
+		//}
+		//else
+		//{
+		//	$sql = "UPDATE alumnos_grupos_activos 
+		//			SET ID_GRUPO = '$id_grupo', CALIFICACION = 0, STATUS = 'Normal'
+		//			WHERE ID_ALUMNO = '$id_alumno'";
+		//}
 
-		if(!$existe_en_grupos)
-		{
-			$sql = "INSERT INTO alumnos_grupos_activos (id, ID_GRUPO, ID_ALUMNO, CALIFICACION, STATUS)
-				VALUES ( null,'$id_grupo', '$id_alumno', 0, 'Normal')";
-		}
-		else
-		{
-			$sql = "UPDATE alumnos_grupos_activos 
-					SET ID_GRUPO = '$id_grupo', CALIFICACION = 0, STATUS = 'Normal'
-					WHERE ID_ALUMNO = '$id_alumno'";
-		}
-
-		return ejecutarConsulta($sql);
+		//return ejecutarConsulta($sql);
 	}
 
 	public function dejarGrupos($id_alumno)

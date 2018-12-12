@@ -35,6 +35,11 @@ Class Maestro
 		return ejecutarConsulta($sql);
 	}
 
+	public function editarPerfil($id,$password){
+		$sql="UPDATE maestros SET  password = '$password' WHERE id='$id'";
+		return ejecutarConsulta($sql);
+	}
+
 	//Implementamos un método para desactivar categorías
 	public function desactivar($idcategoria)
 	{
